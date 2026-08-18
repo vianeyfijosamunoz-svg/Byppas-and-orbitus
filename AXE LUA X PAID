@@ -1,0 +1,229 @@
+local v8 = game:GetService('Players') 
+local v10 = game:GetService('RunService') 
+local v11 = v8.LocalPlayer 
+local v12 = v11.Character or v11.CharacterAdded:Wait() 
+local v13 = v12:WaitForChild('HumanoidRootPart') 
+local camera = workspace.CurrentCamera
+
+local orbActive = false
+local slingActive = false
+local menuVisible = true
+local orbConn, slingConn, childAddedConn, childRemovedConn
+local angle = 0
+local projectiles = {}
+
+-- Configuración personalizable
+local orbitSpeed = 500  
+local orbitDistance = 2 
+
+-- GUI Setup
+local v20 = Instance.new('ScreenGui', v11:WaitForChild("PlayerGui")) 
+v20.Name = 'AxeLuaGui' 
+v20.ResetOnSpawn = false 
+
+-- Texto Rainbow de Estado de Orbitus (Arriba en la pantalla)
+local rainbowLabel = Instance.new('TextLabel', v20)
+rainbowLabel.Size = UDim2.new(0, 300, 0, 40)
+rainbowLabel.Position = UDim2.new(0.5, -150, 0.1, 0)
+rainbowLabel.BackgroundTransparency = 1
+rainbowLabel.Text = ""
+rainbowLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+rainbowLabel.Font = Enum.Font.GothamBold
+rainbowLabel.TextSize = 18
+rainbowLabel.Visible = false
+
+-- Botón para abrir la interfaz (AXE LUA)
+local toggleBtn = Instance.new('TextButton', v20)
+toggleBtn.Size = UDim2.new(0, 120, 0, 40) 
+toggleBtn.Position = UDim2.new(0.05, 0, 0.5, 0) 
+toggleBtn.BackgroundColor3 = Color3.fromRGB(20, 20, 25) 
+toggleBtn.Text = 'AXE LUA'
+toggleBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+toggleBtn.Font = Enum.Font.GothamBold 
+toggleBtn.TextSize = 14
+toggleBtn.Draggable = true 
+Instance.new('UICorner', toggleBtn).CornerRadius = UDim.new(0, 8)
+Instance.new('UIStroke', toggleBtn).Color = Color3.fromRGB(200, 50, 50)
+
+-- Main Frame (AXE LUA X PAID)
+local v27 = Instance.new('Frame', v20) 
+v27.Size = UDim2.new(0, 180, 0, 255) 
+v27.Position = UDim2.new(0.5, -90, 0.5, -127) 
+v27.BackgroundColor3 = Color3.fromRGB(18, 18, 22) 
+v27.Active = true 
+v27.Draggable = true 
+Instance.new('UICorner', v27).CornerRadius = UDim.new(0, 10)
+Instance.new('UIStroke', v27).Color = Color3.fromRGB(200, 50, 50)
+
+local title = Instance.new('TextLabel', v27) 
+title.Size = UDim2.new(1, 0, 0, 35) 
+title.BackgroundTransparency = 1 
+title.Text = 'AXE LUA X PAID' 
+title.TextColor3 = Color3.fromRGB(255, 255, 255) 
+title.Font = Enum.Font.GothamBold 
+title.TextSize = 16
+
+local v70 = Instance.new('TextLabel', v27) 
+v70.Size = UDim2.new(1, 0, 0, 20) 
+v70.Position = UDim2.new(0, 0, 0, 30) 
+v70.BackgroundTransparency = 1 
+v70.Text = 'STATUS: IDLE' 
+v70.TextColor3 = Color3.fromRGB(100, 100, 100) 
+v70.TextSize = 10 
+v70.Font = Enum.Font.GothamMedium 
+
+-- Botón ORBIT
+local orbBtn = Instance.new('TextButton', v27)
+orbBtn.Size = UDim2.new(0, 160, 0, 32)
+orbBtn.Position = UDim2.new(0, 10, 0, 55)
+orbBtn.BackgroundColor3 = Color3.fromRGB(30, 30, 35) 
+orbBtn.Text = 'ORBIT'
+orbBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+orbBtn.Font = Enum.Font.GothamBold
+Instance.new('UICorner', orbBtn).CornerRadius = UDim.new(0, 6)
+
+-- Control: Velocidad de orbitus
+local speedBox = Instance.new('TextBox', v27)
+speedBox.Size = UDim2.new(0, 160, 0, 28)
+speedBox.Position = UDim2.new(0, 10, 0, 93)
+speedBox.BackgroundColor3 = Color3.fromRGB(25, 25, 30)
+speedBox.Text = "Velocidad: 500"
+speedBox.TextColor3 = Color3.fromRGB(200, 200, 200)
+speedBox.Font = Enum.Font.GothamMedium
+speedBox.TextSize = 12
+Instance.new('UICorner', speedBox).CornerRadius = UDim.new(0, 6)
+Instance.new('UIStroke', speedBox).Color = Color3.fromRGB(60, 60, 70)
+
+-- Control: Studs Enemy
+local studsBox = Instance.new('TextBox', v27)
+studsBox.Size = UDim2.new(0, 160, 0, 28)
+studsBox.Position = UDim2.new(0, 10, 0, 127)
+studsBox.BackgroundColor3 = Color3.fromRGB(25, 25, 30)
+studsBox.Text = "Studs: 2"
+studsBox.TextColor3 = Color3.fromRGB(200, 200, 200)
+studsBox.Font = Enum.Font.GothamMedium
+studsBox.TextSize = 12
+Instance.new('UICorner', studsBox).CornerRadius = UDim.new(0, 6)
+Instance.new('UIStroke', studsBox).Color = Color3.fromRGB(60, 60, 70)
+
+-- Botón BYPASS SLING
+local slingBtn = Instance.new('TextButton', v27)
+slingBtn.Size = UDim2.new(0, 160, 0, 32)
+slingBtn.Position = UDim2.new(0, 10, 0, 162)
+slingBtn.BackgroundColor3 = Color3.fromRGB(30, 30, 35) 
+slingBtn.Text = 'BYPASS SLING'
+slingBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+slingBtn.Font = Enum.Font.GothamBold
+Instance.new('UICorner', slingBtn).CornerRadius = UDim.new(0, 6)
+
+speedBox.FocusLost:Connect(function()
+    local num = tonumber(speedBox.Text:match("%d+"))
+    if num then
+        if num < 100 then num = 100 end
+        if num > 5000 then num = 5000 end
+        orbitSpeed = num
+        speedBox.Text = "Velocidad: " .. orbitSpeed
+    else
+        speedBox.Text = "Velocidad: " .. orbitSpeed
+    end
+end)
+
+studsBox.FocusLost:Connect(function()
+    local num = tonumber(studsBox.Text:match("%d+"))
+    if num then
+        if num < 0 then num = 0 end
+        orbitDistance = num
+        studsBox.Text = "Studs: " .. orbitDistance
+    else
+        studsBox.Text = "Studs: " .. orbitDistance
+    end
+end)
+
+local function updateStatus()
+    local parts = {}
+    if orbActive then table.insert(parts, "ORBIT") end
+    if slingActive then table.insert(parts, "BYPASS") end
+    v70.Text = (#parts > 0) and ("STATUS: " .. table.concat(parts, " | ")) or "STATUS: IDLE"
+end
+
+toggleBtn.MouseButton1Click:Connect(function()
+    menuVisible = not menuVisible
+    v27.Visible = menuVisible
+end)
+
+-- Bucle de Efecto Rainbow para el texto superior
+v10.RenderStepped:Connect(function()
+    if orbActive then
+        local hue = tick() % 5 / 5
+        rainbowLabel.TextColor3 = Color3.fromHSV(hue, 1, 1)
+    end
+end)
+
+orbBtn.Activated:Connect(function()
+    orbActive = not orbActive
+    orbBtn.BackgroundColor3 = orbActive and Color3.fromRGB(200, 50, 50) or Color3.fromRGB(30, 30, 35)
+    rainbowLabel.Visible = orbActive
+    
+    if orbActive then
+        orbConn = v10.Heartbeat:Connect(function()
+            local closest, dist = nil, math.huge
+            for _, p in pairs(v8:GetPlayers()) do
+                if p ~= v11 and p.Character and p.Character:FindFirstChild("HumanoidRootPart") then
+                    local d = (v13.Position - p.Character.HumanoidRootPart.Position).Magnitude
+                    if d < dist then dist = d closest = p end
+                end
+            end
+            
+            if closest and closest.Character then
+                local hrp = closest.Character.HumanoidRootPart
+                local mappedSpeed = (orbitSpeed / 500) * 0.018
+                angle = angle + mappedSpeed
+                
+                -- Aplicar posición de órbita
+                v13.CFrame = CFrame.new(hrp.Position + Vector3.new(math.cos(angle) * orbitDistance, 4, math.sin(angle) * orbitDistance), hrp.Position)
+                
+                -- Aimbot: fijar la cámara al objetivo del orbitus
+                camera.CFrame = CFrame.new(camera.CFrame.Position, hrp.Position)
+                
+                -- Actualizar texto rainbow con el nombre del objetivo
+                rainbowLabel.Text = 'orbitus: "' .. closest.Name .. '"'
+            else
+                rainbowLabel.Text = 'orbitus: "Ninguno"'
+            end
+        end)
+    else
+        if orbConn then orbConn:Disconnect() end
+        rainbowLabel.Text = ""
+    end
+    updateStatus()
+end)
+
+slingBtn.Activated:Connect(function()
+    slingActive = not slingActive
+    slingBtn.BackgroundColor3 = slingActive and Color3.fromRGB(200, 50, 50) or Color3.fromRGB(30, 30, 35)
+    if slingActive then
+        childAddedConn = workspace.ChildAdded:Connect(function(o)
+            if o.Name == "CoreProjectile" or (o:IsA("BasePart") and o.AssemblyLinearVelocity.Magnitude > 50) then projectiles[o] = true end
+        end)
+        slingConn = v10.Heartbeat:Connect(function()
+            for _, p in pairs(v8:GetPlayers()) do
+                if p ~= v11 and p.Character and p.Character:FindFirstChild("HumanoidRootPart") then
+                    p.Character.HumanoidRootPart.AssemblyLinearVelocity = Vector3.new(math.random(-5, 5), -15, math.random(-5, 5)) 
+                end 
+            end
+            for o in pairs(projectiles) do
+                if o and o.Parent then o.AssemblyLinearVelocity = Vector3.new(0, -5, 0) else projectiles[o] = nil end 
+            end
+        end)
+    else
+        if slingConn then slingConn:Disconnect() end
+        if childAddedConn then childAddedConn:Disconnect() end
+        projectiles = {}
+    end
+    updateStatus()
+end)
+
+v11.CharacterAdded:Connect(function(c) 
+    v12 = c
+    v13 = c:WaitForChild('HumanoidRootPart') 
+end)
