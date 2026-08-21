@@ -1,24 +1,20 @@
-local v8 = game:GetService('Players') 
-local v10 = game:GetService('RunService') 
-local v11 = v8.LocalPlayer 
-local v12 = v11.Character or v11.CharacterAdded:Wait() 
-local v13 = v12:WaitForChild('HumanoidRootPart') 
+local v8 = game:GetService('Players')
+local v10 = game:GetService('RunService')
+local v11 = v8.LocalPlayer
+local v12 = v11.Character or v11.CharacterAdded:Wait()
+local v13 = v12:WaitForChild('HumanoidRootPart')
 local camera = workspace.CurrentCamera
 
-local orbActive = false
+local orbMode = 1
 local slingActive = false
-local baitActive = false
 local menuVisible = true
 local orbConn, slingConn, childAddedConn, childRemovedConn
 local angle = 0
 local projectiles = {}
 
-local orbitSpeed = 0  
-local orbitDistance = 0 
-
-local v20 = Instance.new('ScreenGui', v11:WaitForChild("PlayerGui")) 
-v20.Name = 'AxeLuaGui' 
-v20.ResetOnSpawn = false 
+local v20 = Instance.new('ScreenGui', v11:WaitForChild("PlayerGui"))
+v20.Name = 'AxeLuaGui'
+v20.ResetOnSpawn = false
 
 local rainbowLabel = Instance.new('TextLabel', v20)
 rainbowLabel.Size = UDim2.new(0, 300, 0, 40)
@@ -31,66 +27,67 @@ rainbowLabel.TextSize = 18
 rainbowLabel.Visible = false
 
 local toggleBtn = Instance.new('TextButton', v20)
-toggleBtn.Size = UDim2.new(0, 120, 0, 40) 
-toggleBtn.Position = UDim2.new(0.05, 0, 0.5, 0) 
-toggleBtn.BackgroundColor3 = Color3.fromRGB(20, 20, 25) 
-toggleBtn.Text = 'AXE LUA'
+toggleBtn.Size = UDim2.new(0, 120, 0, 40)
+toggleBtn.Position = UDim2.new(0.05, 0, 0.5, 0)
+toggleBtn.BackgroundColor3 = Color3.fromRGB(20, 20, 25)
+toggleBtn.Text = 'AXE LUA V2'
 toggleBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-toggleBtn.Font = Enum.Font.GothamBold 
+toggleBtn.Font = Enum.Font.GothamBold
 toggleBtn.TextSize = 14
-toggleBtn.Draggable = true 
+toggleBtn.Draggable = true
 Instance.new('UICorner', toggleBtn).CornerRadius = UDim.new(0, 8)
 Instance.new('UIStroke', toggleBtn).Color = Color3.fromRGB(200, 50, 50)
 
-local v27 = Instance.new('Frame', v20) 
-v27.Size = UDim2.new(0, 180, 0, 200) 
-v27.Position = UDim2.new(0.5, -90, 0.5, -100) 
-v27.BackgroundColor3 = Color3.fromRGB(18, 18, 22) 
-v27.Active = true 
-v27.Draggable = true 
+local v27 = Instance.new('Frame', v20)
+v27.Size = UDim2.new(0, 180, 0, 200)
+v27.Position = UDim2.new(0.5, -90, 0.5, -100)
+v27.BackgroundColor3 = Color3.fromRGB(18, 18, 22)
+v27.Active = true
+v27.Draggable = true
 Instance.new('UICorner', v27).CornerRadius = UDim.new(0, 10)
 Instance.new('UIStroke', v27).Color = Color3.fromRGB(200, 50, 50)
 
-local title = Instance.new('TextLabel', v27) 
-title.Size = UDim2.new(1, 0, 0, 35) 
-title.BackgroundTransparency = 1 
-title.Text = 'AXE LUA X PAID' 
-title.TextColor3 = Color3.fromRGB(255, 255, 255) 
-title.Font = Enum.Font.GothamBold 
+local title = Instance.new('TextLabel', v27)
+title.Size = UDim2.new(1, 0, 0, 35)
+title.BackgroundTransparency = 1
+title.Text = 'AXE X PAID V2'
+title.TextColor3 = Color3.fromRGB(255, 255, 255)
+title.Font = Enum.Font.GothamBold
 title.TextSize = 16
 
-local v70 = Instance.new('TextLabel', v27) 
-v70.Size = UDim2.new(1, 0, 0, 20) 
-v70.Position = UDim2.new(0, 0, 0, 30) 
-v70.BackgroundTransparency = 1 
-v70.Text = 'STATUS: IDLE' 
-v70.TextColor3 = Color3.fromRGB(100, 100, 100) 
-v70.TextSize = 10 
-v70.Font = Enum.Font.GothamMedium 
+local v70 = Instance.new('TextLabel', v27)
+v70.Size = UDim2.new(1, 0, 0, 20)
+v70.Position = UDim2.new(0, 0, 0, 30)
+v70.BackgroundTransparency = 1
+v70.Text = 'STATUS: IDLE'
+v70.TextColor3 = Color3.fromRGB(100, 100, 100)
+v70.TextSize = 10
+v70.Font = Enum.Font.GothamMedium
 
 local orbBtn = Instance.new('TextButton', v27)
 orbBtn.Size = UDim2.new(0, 160, 0, 32)
 orbBtn.Position = UDim2.new(0, 10, 0, 55)
-orbBtn.BackgroundColor3 = Color3.fromRGB(30, 30, 35) 
-orbBtn.Text = 'ORBIT'
+orbBtn.BackgroundColor3 = Color3.fromRGB(30, 30, 35)
+orbBtn.Text = 'ORBIT: OFF'
 orbBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 orbBtn.Font = Enum.Font.GothamBold
+orbBtn.TextSize = 11
 Instance.new('UICorner', orbBtn).CornerRadius = UDim.new(0, 6)
 
-local baitBtn = Instance.new('TextButton', v27)
-baitBtn.Size = UDim2.new(0, 160, 0, 32)
-baitBtn.Position = UDim2.new(0, 10, 0, 95)
-baitBtn.BackgroundColor3 = Color3.fromRGB(30, 30, 35) 
-baitBtn.Text = 'BAITING: OFF'
-baitBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-baitBtn.Font = Enum.Font.GothamBold
-baitBtn.TextSize = 11
-Instance.new('UICorner', baitBtn).CornerRadius = UDim.new(0, 6)
+local modeBtn = Instance.new('TextButton', v27)
+modeBtn.Size = UDim2.new(0, 160, 0, 32)
+modeBtn.Position = UDim2.new(0, 10, 0, 95)
+modeBtn.BackgroundColor3 = Color3.fromRGB(30, 30, 35)
+modeBtn.Text = 'MODE: BAITING'
+modeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+modeBtn.Font = Enum.Font.GothamBold
+modeBtn.TextSize = 11
+Instance.new('UICorner', modeBtn).CornerRadius = UDim.new(0, 6)
 
 local slingBtn = Instance.new('TextButton', v27)
 slingBtn.Size = UDim2.new(0, 160, 0, 32)
 slingBtn.Position = UDim2.new(0, 10, 0, 135)
-slingBtn.BackgroundColor3 = Color3.fromRGB(30, 30, 35) 
+slingBtn.BackgroundColor3 = Color3.fromRGB(30, 30, 35)
 slingBtn.Text = 'BYPASS SLING'
 slingBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 slingBtn.Font = Enum.Font.GothamBold
@@ -98,8 +95,10 @@ Instance.new('UICorner', slingBtn).CornerRadius = UDim.new(0, 6)
 
 local function updateStatus()
     local parts = {}
-    if orbActive then table.insert(parts, "ORBIT") end
-    if baitActive then table.insert(parts, "BAIT") end
+    if orbConn then 
+        local modeNames = {"BAITING", "CLASSIC", "ONLY KNIFE", "UEKILLERS"}
+        table.insert(parts, modeNames[orbMode]) 
+    end
     if slingActive then table.insert(parts, "BYPASS") end
     v70.Text = (#parts > 0) and ("STATUS: " .. table.concat(parts, " | ")) or "STATUS: IDLE"
 end
@@ -110,57 +109,108 @@ toggleBtn.MouseButton1Click:Connect(function()
 end)
 
 v10.RenderStepped:Connect(function()
-    if orbActive then
+    if orbConn then
         local hue = tick() % 5 / 5
         rainbowLabel.TextColor3 = Color3.fromHSV(hue, 1, 1)
     end
 end)
 
-baitBtn.Activated:Connect(function()
-    baitActive = not baitActive
-    baitBtn.BackgroundColor3 = baitActive and Color3.fromRGB(200, 50, 50) or Color3.fromRGB(30, 30, 35)
-    baitBtn.Text = baitActive and "BAITING: ON" or "BAITING: OFF"
+modeBtn.Activated:Connect(function()
+    orbMode = orbMode + 1
+    if orbMode > 4 then orbMode = 1 end
+    
+    local modeNames = {"BAITING", "CLASSIC", "ONLY KNIFE", "UEKILLERS"}
+    modeBtn.Text = "MODE: " .. modeNames[orbMode]
     updateStatus()
 end)
 
 orbBtn.Activated:Connect(function()
-    orbActive = not orbActive
-    orbBtn.BackgroundColor3 = orbActive and Color3.fromRGB(200, 50, 50) or Color3.fromRGB(30, 30, 35)
-    rainbowLabel.Visible = orbActive
-    
-    if orbActive then
+    if orbConn then
+        orbConn:Disconnect()
+        orbConn = nil
+        orbBtn.BackgroundColor3 = Color3.fromRGB(30, 30, 35)
+        orbBtn.Text = 'ORBIT: OFF'
+        rainbowLabel.Visible = false
+        rainbowLabel.Text = ""
+    else
+        orbBtn.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
+        orbBtn.Text = 'ORBIT: ON'
+        rainbowLabel.Visible = true
+        
         orbConn = v10.Heartbeat:Connect(function()
-            local closest, dist = nil, math.huge
-            for _, p in pairs(v8:GetPlayers()) do
-                local isTeammate = (v11.Team ~= nil and p.Team == v11.Team)
-                
-                if p ~= v11 and not isTeammate and p.Character and p.Character:FindFirstChild("HumanoidRootPart") then
-                    local d = (v13.Position - p.Character.HumanoidRootPart.Position).Magnitude
-                    if d < dist then 
-                        dist = d 
-                        closest = p 
+            if not v13 or not v13.Parent then return end
+            
+            if orbMode == 4 then
+                local closestDist = math.huge
+                local closestPlayer = nil
+                for _, player in pairs(v8:GetPlayers()) do
+                    local isTeammate = (v11.Team ~= nil and player.Team == v11.Team)
+                    if player ~= v11 and not isTeammate and player.Character and player.Character:FindFirstChild("Humanoid") and player.Character.Humanoid.Health > 0 then
+                        local head = player.Character:FindFirstChild("Head")
+                        local hrp = player.Character:FindFirstChild("HumanoidRootPart")
+                        if head and hrp then
+                            local dist = (hrp.Position - v13.Position).Magnitude
+                            if dist < closestDist then
+                                closestDist = dist
+                                closestPlayer = player
+                            end
+                        end
                     end
                 end
-            end
-            
-            if closest and closest.Character then
-                local hrp = closest.Character.HumanoidRootPart
-                local mappedSpeed = orbitSpeed * 0.018
-                angle = angle + mappedSpeed
                 
-                local targetHeight = baitActive and -4 or 4
+                if closestPlayer and closestPlayer.Character then
+                    local head = closestPlayer.Character:FindFirstChild("Head")
+                    if head then
+                        local camCFrame = camera.CFrame
+                        local targetPos = head.Position
+                        local direction = (targetPos - camCFrame.Position).Unit
+                        camera.CFrame = CFrame.new(camCFrame.Position, camCFrame.Position + direction)
+                    end
+                    rainbowLabel.Text = 'orbitus: "' .. closestPlayer.Name .. '"'
+                else
+                    rainbowLabel.Text = 'orbitus: "Ninguno"'
+                end
                 
-                v13.CFrame = CFrame.new(hrp.Position + Vector3.new(math.cos(angle) * orbitDistance, targetHeight, math.sin(angle) * orbitDistance), hrp.Position)
-                
-                camera.CFrame = CFrame.new(camera.CFrame.Position, hrp.Position)
-                rainbowLabel.Text = 'orbitus: "' .. closest.Name .. '"'
+                v13.AssemblyLinearVelocity = Vector3.new(0, 200, 0)
             else
-                rainbowLabel.Text = 'orbitus: "Ninguno"'
+                local closest, dist = nil, math.huge
+                for _, p in pairs(v8:GetPlayers()) do
+                    local isTeammate = (v11.Team ~= nil and p.Team == v11.Team)
+                    
+                    if p ~= v11 and not isTeammate and p.Character and p.Character:FindFirstChild("HumanoidRootPart") then
+                        local d = (v13.Position - p.Character.HumanoidRootPart.Position).Magnitude
+                        if d < dist then 
+                            dist = d 
+                            closest = p 
+                        end
+                    end
+                end
+                
+                if closest and closest.Character then
+                    local hrp = closest.Character.HumanoidRootPart
+                    
+                    local currentOrbitDist = (orbMode == 2) and 3 or 0
+                    local currentOrbitSpeed = (orbMode == 2) and 10 or 0
+                    
+                    if orbMode == 1 then
+                        angle = angle + (currentOrbitSpeed * 0.018)
+                        v13.CFrame = CFrame.new(hrp.Position + Vector3.new(0, -4, 0), hrp.Position)
+                        camera.CFrame = CFrame.new(camera.CFrame.Position, hrp.Position)
+                    elseif orbMode == 2 then
+                        angle = angle + (currentOrbitSpeed * 0.018)
+                        v13.CFrame = CFrame.new(hrp.Position + Vector3.new(math.cos(angle) * currentOrbitDist, 4, math.sin(angle) * currentOrbitDist), hrp.Position)
+                        camera.CFrame = CFrame.new(camera.CFrame.Position, hrp.Position)
+                    elseif orbMode == 3 then
+                        v13.CFrame = hrp.CFrame
+                        camera.CFrame = CFrame.new(camera.CFrame.Position, hrp.Position)
+                    end
+                    
+                    rainbowLabel.Text = 'orbitus: "' .. closest.Name .. '"'
+                else
+                    rainbowLabel.Text = 'orbitus: "Ninguno"'
+                end
             end
         end)
-    else
-        if orbConn then orbConn:Disconnect() end
-        rainbowLabel.Text = ""
     end
     updateStatus()
 end)
@@ -244,7 +294,7 @@ slingBtn.Activated:Connect(function()
     updateStatus()
 end)
 
-v11.CharacterAdded:Connect(function(c) 
+v11.CharacterAdded:Connect(function(c)
     v12 = c
-    v13 = c:WaitForChild('HumanoidRootPart') 
+    v13 = c:WaitForChild('HumanoidRootPart')
 end)
