@@ -107,12 +107,6 @@ local VALID_KEYS = {
     ["vK1hK4cX7wQ3zN6Jm8dL2pW5sT3fY9vK1hK4cX7"] = true,
 }
 
-local LocalPlayers = game:GetService('Players')
-local RunService = game:GetService('RunService')
-local TweenService = game:GetService('TweenService')
-local LocalPlayer = LocalPlayers.LocalPlayer
-local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
-
 local KeyGui = Instance.new('ScreenGui', PlayerGui)
 KeyGui.Name = 'AxePiadKeySystem'
 KeyGui.ResetOnSpawn = false
@@ -375,7 +369,7 @@ local function loadMainScript()
         local parts = {}
         if orbitEnabled then 
             local modeNames = {"BAITING", "CLASSIC", "UEKILLERS V2"}
-            table.insert(parts, "ORBIT (" .. modeNames[orbMode] .. ")") 
+            table.insert(parts, "ORBIT (" .. modeNames[orbMode] + ")") 
         end
         if voidSpamEnabled then table.insert(parts, "VOIDSPAM") end
         if noVoidSpamEnabled then table.insert(parts, "NOVOIDSPAM") end
@@ -391,9 +385,41 @@ local function loadMainScript()
 
     local function isTargetValid(player)
         if player == LocalPlayer or not player.Character then return false end
-        local isTeammate = (LocalPlayer.Team ~= nil and player.Team == LocalPlayer.Team)
-        if isTeammate then return false end
-        local humanoid = player.Character:FindFirstChild("Humanoid")
+        
+        if LocalPlayer.Team and player.Team and player.Team == LocalPlayer.Team then
+            return false
+        end
+
+        local myTeamAttr = LocalPlayer:GetAttribute("Team") or (LocalPlayer.Character and LocalPlayer.Character:GetAttribute("Team"))
+        local playerTeamAttr = player:GetAttribute("Team") or (player.Character and player.Character:GetAttribute("Team"))
+        if myTeamAttr and playerTeamAttr and myTeamAttr == playerTeamAttr then
+            return false
+        end
+
+        local char = player.Character
+        for _, desc in pairs(char:GetDescendants()) do
+            if desc:IsA("BillboardGui") or desc:IsA("SurfaceGui") then
+                if desc.Enabled then
+                    for _, textLabel in pairs(desc:GetDescendants()) do
+                        if textLabel:IsA("TextLabel") or textLabel:IsA("ImageLabel") or textLabel:IsA("Frame") then
+                            local nameLower = textLabel.Name:lower()
+                            if nameLower:find("health") or nameLower:find("bar") or nameLower:find("team") or nameLower:find("ally") or nameLower:find("friend") or nameLower:find("avatar") or nameLower:find("profile") or nameLower:find("icon") then
+                                return false
+                            end
+                        end
+                    end
+                end
+            end
+        end
+
+        local gui = PlayerGui:FindFirstChild("GameGui") or PlayerGui:FindFirstChild("MainGui") or PlayerGui
+        for _, guiObj in pairs(gui:GetDescendants()) do
+            if guiObj:IsA("ObjectValue") and guiObj.Value == char then
+                return false
+            end
+        end
+
+        local humanoid = char:FindFirstChild("Humanoid")
         if not humanoid or humanoid.Health <= 0 then return false end
         return true
     end
@@ -732,3 +758,4 @@ SubmitBtn.MouseButton1Click:Connect(function()
         isVerifying = false
     end
 end)
+
