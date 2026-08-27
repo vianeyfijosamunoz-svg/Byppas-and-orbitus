@@ -1,1064 +1,903 @@
-local KeySystemEnabled = true
-
-local ValidKeys = {
-    "k9x2m4p8q3w6n0b1z5v7t1j5l7a4f8h1",
-    "m4p8x1z5v7q3w6n0b2c4f8h1j5l7t9k2",
-    "v7q3w6n0b2c4f8h1j5l7t9k2m4p8x1z5",
-    "b2c4f8h1j5l7t9k2m4p8x1z5v7q3w6n0",
-    "h1j5l7t9k2m4p8x1z5v7q3w6n0b2c4f8",
-    "t9k2m4p8x1z5v7q3w6n0b2c4f8h1j5l7",
-    "2c4f8h1j5l7t9k2m4p8x1z5v7q3w6n0b",
-    "5v7q3w6n0b2c4f8h1j5l7t9k2m4p8x1z",
-    "8x1z5v7q3w6n0b2c4f8h1j5l7t9k2m4p",
-    "0b2c4f8h1j5l7t9k2m4p8x1z5v7q3w6n",
-    "3w6n0b2c4f8h1j5l7t9k2m4p8x1z5v7q",
-    "9k2m4p8x1z5v7q3w6n0b2c4f8h1j5l7a",
-    "4f8h1j5l7t9k2m4p8x1z5v7q3w6n0b2d",
-    "1z5v7q3w6n0b2c4f8h1j5l7t9k2m4p8e",
-    "6n0b2c4f8h1j5l7t9k2m4p8x1z5v7q3f",
-    "7t9k2m4p8x1z5v7q3w6n0b2c4f8h1j5g",
-    "2c4f8h1j5l7t9k2m4p8x1z5v7q3w6n0h",
-    "5v7q3w6n0b2c4f8h1j5l7t9k2m4p8x1i",
-    "8x1z5v7q3w6n0b2c4f8h1j5l7t9k2m4j",
-    "0b2c4f8h1j5l7t9k2m4p8x1z5v7q3w6k",
-    "x7z3m9p2q1w5n8b4v6c0f2h5j1l8t9k3",
-    "p2q5w8n1b4v7c0f3h6j9l2t1k4x7z5m8",
-    "n8b2v5c1f4h7j0l3t6k9x2z5m1p4q7w8",
-    "h4j7l0t3k6x9z2m5p8q1w4n7b0v3c6f9",
-    "t3k6x9z2m5p8q1w4n7b0v3c6f9h2j5l8",
-    "z2m5p8q1w4n7b0v3c6f9h2j5l8t1k4x7",
-    "c6f9h2j5l8t1k4x7z3m6p9q2w5n8b1v4",
-    "f9h2j5l8t1k4x7z3m6p9q2w5n8b1v4c7",
-    "l8t1k4x7z3m6p9q2w5n8b1v4c7f0h3j6",
-    "k4x7z3m6p9q2w5n8b1v4c7f0h3j6l9t2",
-    "w5n8b1v4c7f0h3j6l9t2k5x8z1m4p7q3",
-    "q1w5n8b4v6c0f2h5j1l8t9k3x7z2m4p6",
-    "b4v7c0f3h6j9l2t1k4x7z5m8p2q5w8n1",
-    "f4h7j0l3t6k9x2z5m1p4q7w8n8b2v5c1",
-    "k6x9z2m5p8q1w4n7b0v3c6f9h4j7l0t3",
-    "p8q1w4n7b0v3c6f9h2j5l8t3k6x9z2m5",
-    "v3c6f9h2j5l8t1k4x7z3m6p9q2w5n8b1",
-    "j5l8t1k4x7z3m6p9q2w5n8b1v4c7f9h2",
-    "x7z3m6p9q2w5n8b1v4c7f0h3j6l8t1k4",
-    "m9q2w5n8b1v4c7f0h3j6l9t2k4x7z3m6",
-    "3b7v2c9x5z1m8k4p6q0w1n3h5j7l2t4f",
-    "9z1m8k4p6q0w1n3h5j7l2t4f3b7v2c9x",
-    "6q0w1n3h5j7l2t4f3b7v2c9x9z1m8k4p",
-    "1n3h5j7l2t4f3b7v2c9x6q0w1n3h5j7l",
-    "h5j7l2t4f3b7v2c9x1n3h5j7l2t4f3b7",
-    "2t4f3b7v2c9x1n3h5j7l2t4f3b7v2c9x",
-    "v2c9x1n3h5j7l2t4f3b7v2c9x1n3h5j7",
-    "x1n3h5j7l2t4f3b7v2c9x1n3h5j7l2t4",
-    "8k4p6q0w1n3h5j7l2t4f3b7v2c9x5z1m",
-    "0w1n3h5j7l2t4f3b7v2c9x8k4p6q0w1n",
-    "4p6q0w1n3h5j7l2t4f3b7v2c9x0w1n3h",
-    "7l2t4f3b7v2c9x8k4p6q0w1n3h5j7l2t",
-    "3f3b7v2c9x1n3h5j7l2t4f3b7v2c9x1n",
-    "c9x1n3h5j7l2t4f3b7v2c9x3f3b7v2c9",
-    "j7l2t4f3b7v2c9x1n3h5j7l2t4f3b7v2",
-    "t4f3b7v2c9x1n3h5j7l2t4f3b7v2c9x1",
-    "7v2c9x1n3h5j7l2t4f3b7v2c9x1n3h5j",
-    "x1n3h5j7l2t4f3b7v2c9x7v2c9x1n3h5",
-    "p6q0w1n3h5j7l2t4f3b7v2c9x8k4p6q0",
-    "1n3h5j7l2t4f3b7v2c9x4p6q0w1n3h5j7",
-    "w8k2m4p1x7z3v5q9w6n0b2c4f8h1j5l7",
-    "2m4p1x7z3v5q9w6n0b2c4f8h1j5l7t9k",
-    "1x7z3v5q9w6n0b2c4f8h1j5l7t9k2m4p",
-    "z3v5q9w6n0b2c4f8h1j5l7t9k2m4p1x7",
-    "q9w6n0b2c4f8h1j5l7t9k2m4p1x7z3v5",
-    "0b2c4f8h1j5l7t9k2m4p1x7z3v5q9w6n",
-    "f8h1j5l7t9k2m4p1x7z3v5q9w6n0b2c4",
-    "t9k2m4p1x7z3v5q9w6n0b2c4f8h1j5l7",
-    "2c4f8h1j5l7t9k2m4p1x7z3v5q9w6n0b",
-    "5v7q9w6n0b2c4f8h1j5l7t9k2m4p1x7z",
-    "8x1z3v5q9w6n0b2c4f8h1j5l7t9k2m4p",
-    "0b2c4f8h1j5l7t9k2m4p8x1z3v5q9w6n",
-    "3w6n0b2c4f8h1j5l7t9k2m4p8x1z3v5q",
-    "9k2m4p8x1z3v5q9w6n0b2c4f8h1j5l7a",
-    "4f8h1j5l7t9k2m4p8x1z3v5q9w6n0b2d",
-    "1z3v5q9w6n0b2c4f8h1j5l7t9k2m4p8e",
-    "6n0b2c4f8h1j5l7t9k2m4p8x1z3v5q3f",
-    "7t9k2m4p8x1z3v5q9w6n0b2c4f8h1j5g",
-    "2c4f8h1j5l7t9k2m4p8x1z3v5q9w6n0h",
-    "5q9w6n0b2c4f8h1j5l7t9k2m4p8x1z3v",
-    "8x1z3v5q9w6n0b2c4f8h1j5l7t9k2m4j",
-    "0b2c4f8h1j5l7t9k2m4p8x1z3v5q3w6k",
-    "3w6n0b2c4f8h1j5l7t9k2m4p8x1z3v5l",
-    "9k2m4p8x1z3v5q9w6n0b2c4f8h1j5l7m",
-    "4f8h1j5l7t9k2m4p8x1z3v5q9w6n0b2n",
-    "1z3v5q9w6n0b2c4f8h1j5l7t9k2m4p8o",
-    "6n0b2c4f8h1j5l7t9k2m4p8x1z3v5q3p",
-    "7t9k2m4p8x1z3v5q9w6n0b2c4f8h1j5q",
-    "2c4f8h1j5l7t9k2m4p8x1z3v5q9w6n0r",
-    "5q9w6n0b2c4f8h1j5l7t9k2m4p8x1z3s",
-    "8x1z3v5q9w6n0b2c4f8h1j5l7t9k2m4t",
-    "0b2c4f8h1j5l7t9k2m4p8x1z3v5q3w6u",
-    "3w6n0b2c4f8h1j5l7t9k2m4p8x1z3v5v",
-    "9k2m4p8x1z3v5q9w6n0b2c4f8h1j5l7w",
-    "4f8h1j5l7t9k2m4p8x1z3v5q9w6n0b2x",
-    "1z3v5q9w6n0b2c4f8h1j5l7t9k2m4p8y",
-    "6n0b2c4f8h1j5l7t9k2m4p8x1z3v5q3z",
-    "7t9k2m4p8x1z3v5q9w6n0b2c4f8h1j51",
-    "2c4f8h1j5l7t9k2m4p8x1z3v5q9w6n02",
-    "5q9w6n0b2c4f8h1j5l7t9k2m4p8x1z33",
-    "8x1z3v5q9w6n0b2c4f8h1j5l7t9k2m44"
-}
-
-local function IsValidKey(inputKey)
-    for _, key in ipairs(ValidKeys) do
-        if key == inputKey then
-            return true
-        end
-    end
-    return false
-end
-
-if KeySystemEnabled then
-    local CoreGui = game:GetService("CoreGui")
-    local Players = game:GetService("Players")
-    local RunService = game:GetService("RunService")
-    local TweenService = game:GetService("TweenService")
-    local LocalPlayer = Players.LocalPlayer
-
-    local ScreenGui = Instance.new("ScreenGui")
-    ScreenGui.Name = "AxeCyberKeySystem"
-    ScreenGui.Parent = CoreGui
-    ScreenGui.ResetOnSpawn = false
-
-    local MainWrapper = Instance.new("Frame")
-    MainWrapper.Size = UDim2.new(0, 480, 0, 260)
-    MainWrapper.Position = UDim2.new(0.5, -290, 0.5, -160)
-    MainWrapper.BackgroundColor3 = Color3.fromRGB(10, 14, 20)
-    MainWrapper.BackgroundTransparency = 1
-    MainWrapper.BorderSizePixel = 0
-    MainWrapper.Parent = ScreenGui
-
-    local MainCorner = Instance.new("UICorner")
-    MainCorner.CornerRadius = UDim.new(0, 12)
-    MainCorner.Parent = MainWrapper
-
-    local MainStroke = Instance.new("UIStroke")
-    MainStroke.Color = Color3.fromRGB(88, 166, 255)
-    MainStroke.Transparency = 1
-    MainStroke.Thickness = 1.8
-    MainStroke.Parent = MainWrapper
-
-    local UIGradient = Instance.new("UIGradient")
-    UIGradient.Color = ColorSequence.new({
-        ColorSequenceKeypoint.new(0, Color3.fromRGB(18, 24, 38)),
-        ColorSequenceKeypoint.new(1, Color3.fromRGB(8, 11, 16))
-    })
-    UIGradient.Rotation = 45
-    UIGradient.Parent = MainWrapper
-
-    TweenService:Create(MainWrapper, TweenInfo.new(0.6, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {
-        Size = UDim2.new(0, 580, 0, 320),
-        BackgroundTransparency = 0
-    }):Play()
-    TweenService:Create(MainStroke, TweenInfo.new(0.8, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-        Transparency = 0.2
-    }):Play()
-
-    local Header = Instance.new("Frame")
-    Header.Size = UDim2.new(1, 0, 0, 60)
-    Header.BackgroundTransparency = 1
-    Header.Parent = MainWrapper
-
-    local Title = Instance.new("TextLabel")
-    Title.Size = UDim2.new(1, -30, 0, 24)
-    Title.Position = UDim2.new(0, 20, 0, 12)
-    Title.BackgroundTransparency = 1
-    Title.Font = Enum.Font.GothamBold
-    Title.Text = "AXE LUA // SECURE AUTHENTICATION"
-    Title.TextColor3 = Color3.fromRGB(240, 246, 252)
-    Title.TextSize = 17
-    Title.TextXAlignment = Enum.TextXAlignment.Left
-    Title.Parent = Header
-
-    local Subtitle = Instance.new("TextLabel")
-    Subtitle.Size = UDim2.new(1, -30, 0, 18)
-    Subtitle.Position = UDim2.new(0, 20, 0, 36)
-    Subtitle.BackgroundTransparency = 1
-    Subtitle.Font = Enum.Font.Code
-    Subtitle.Text = "ENCRYPTED ACCESS TERMINAL v3.5"
-    Subtitle.TextColor3 = Color3.fromRGB(88, 166, 255)
-    Subtitle.TextSize = 11
-    Subtitle.TextXAlignment = Enum.TextXAlignment.Left
-    Subtitle.Parent = Header
-
-    local LeftContainer = Instance.new("Frame")
-    LeftContainer.Size = UDim2.new(0, 240, 1, -75)
-    LeftContainer.Position = UDim2.new(0, 20, 0, 65)
-    LeftContainer.BackgroundColor3 = Color3.fromRGB(15, 20, 28)
-    LeftContainer.BorderSizePixel = 0
-    LeftContainer.Parent = MainWrapper
-
-    local LeftCorner = Instance.new("UICorner")
-    LeftCorner.CornerRadius = UDim.new(0, 8)
-    LeftCorner.Parent = LeftContainer
-
-    local LeftStroke = Instance.new("UIStroke")
-    LeftStroke.Color = Color3.fromRGB(33, 42, 56)
-    LeftStroke.Thickness = 1
-    LeftStroke.Parent = LeftContainer
-
-    local InfoLayout = Instance.new("UIListLayout")
-    InfoLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    InfoLayout.Padding = UDim.new(0, 8)
-    InfoLayout.Parent = LeftContainer
-
-    local InfoPadding = Instance.new("UIPadding")
-    InfoPadding.PaddingTop = UDim.new(0, 12)
-    InfoPadding.PaddingBottom = UDim.new(0, 12)
-    InfoPadding.PaddingLeft = UDim.new(0, 12)
-    InfoPadding.PaddingRight = UDim.new(0, 12)
-    InfoPadding.Parent = LeftContainer
-
-    local function createInfoItem(labelName, initialValue)
-        local itemFrame = Instance.new("Frame")
-        itemFrame.Size = UDim2.new(1, 0, 0, 30)
-        itemFrame.BackgroundColor3 = Color3.fromRGB(22, 29, 40)
-        itemFrame.BorderSizePixel = 0
-        
-        local corner = Instance.new("UICorner")
-        corner.CornerRadius = UDim.new(0, 6)
-        corner.Parent = itemFrame
-        
-        local titleLabel = Instance.new("TextLabel")
-        titleLabel.Size = UDim2.new(0.4, 0, 1, 0)
-        titleLabel.Position = UDim2.new(0, 8, 0, 0)
-        titleLabel.BackgroundTransparency = 1
-        titleLabel.Font = Enum.Font.GothamBold
-        titleLabel.Text = labelName
-        titleLabel.TextColor3 = Color3.fromRGB(139, 148, 158)
-        titleLabel.TextSize = 11
-        titleLabel.TextXAlignment = Enum.TextXAlignment.Left
-        titleLabel.Parent = itemFrame
-        
-        local valLabel = Instance.new("TextLabel")
-        valLabel.Size = UDim2.new(0.6, -8, 1, 0)
-        valLabel.Position = UDim2.new(0.4, 0, 0, 0)
-        valLabel.BackgroundTransparency = 1
-        valLabel.Font = Enum.Font.Code
-        valLabel.Text = initialValue
-        valLabel.TextColor3 = Color3.fromRGB(88, 166, 255)
-        valLabel.TextSize = 12
-        valLabel.TextXAlignment = Enum.TextXAlignment.Right
-        valLabel.Parent = itemFrame
-        
-        return itemFrame, valLabel
-    end
-
-    local _, userVal = createInfoItem("USER:", LocalPlayer.Name)
-    userVal.Parent.Parent = LeftContainer
-
-    local _, execVal = createInfoItem("EXECUTOR:", (identifyexecutor and identifyexecutor()) or "Unknown")
-    execVal.Parent.Parent = LeftContainer
-
-    local _, devVal = createInfoItem("DEVICE:", (game:GetService("UserInputService").TouchEnabled and not game:GetService("UserInputService").MouseEnabled) and "Mobile" or "PC")
-    devVal.Parent.Parent = LeftContainer
-
-    local _, fpsVal = createInfoItem("FPS:", "60")
-    fpsVal.Parent.Parent = LeftContainer
-
-    local frameCount = 0
-    local lastTick = tick()
-    RunService.RenderStepped:Connect(function()
-        frameCount = frameCount + 1
-        local currentTick = tick()
-        if currentTick - lastTick >= 1 then
-            if fpsVal and fpsVal.Parent then
-                fpsVal.Text = tostring(math.floor(frameCount / (currentTick - lastTick)))
-            end
-            frameCount = 0
-            lastTick = currentTick
-        end
-    end)
-
-    local RightContainer = Instance.new("Frame")
-    RightContainer.Size = UDim2.new(1, -280, 1, -75)
-    RightContainer.Position = UDim2.new(0, 270, 0, 65)
-    RightContainer.BackgroundTransparency = 1
-    RightContainer.Parent = MainWrapper
-
-    local TextBox = Instance.new("TextBox")
-    TextBox.Size = UDim2.new(1, 0, 0, 48)
-    TextBox.Position = UDim2.new(0, 0, 0.1, 0)
-    TextBox.BackgroundColor3 = Color3.fromRGB(15, 20, 28)
-    TextBox.TextColor3 = Color3.fromRGB(240, 246, 252)
-    TextBox.PlaceholderText = "Paste your access key here..."
-    TextBox.PlaceholderColor3 = Color3.fromRGB(110, 118, 129)
-    TextBox.Text = ""
-    TextBox.Font = Enum.Font.Code
-    TextBox.TextSize = 12
-    TextBox.ClearTextOnFocus = false
-    TextBox.Parent = RightContainer
-
-    local BoxCorner = Instance.new("UICorner")
-    BoxCorner.CornerRadius = UDim.new(0, 6)
-    BoxCorner.Parent = TextBox
-
-    local BoxStroke = Instance.new("UIStroke")
-    BoxStroke.Color = Color3.fromRGB(33, 42, 56)
-    BoxStroke.Thickness = 1.2
-    BoxStroke.Parent = TextBox
-
-    TextBox.Focused:Connect(function()
-        TweenService:Create(BoxStroke, TweenInfo.new(0.3), {Color = Color3.fromRGB(88, 166, 255)}):Play()
-    end)
-    TextBox.FocusLost:Connect(function()
-        TweenService:Create(BoxStroke, TweenInfo.new(0.3), {Color = Color3.fromRGB(33, 42, 56)}):Play()
-    end)
-
-    local SubmitBtn = Instance.new("TextButton")
-    SubmitBtn.Size = UDim2.new(1, 0, 0, 48)
-    SubmitBtn.Position = UDim2.new(0, 0, 0.55, 0)
-    SubmitBtn.BackgroundColor3 = Color3.fromRGB(31, 111, 235)
-    SubmitBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-    SubmitBtn.Text = "VERIFY KEY"
-    SubmitBtn.Font = Enum.Font.GothamBold
-    SubmitBtn.TextSize = 13
-    SubmitBtn.AutoButtonColor = false
-    SubmitBtn.Parent = RightContainer
-
-    local BtnCorner = Instance.new("UICorner")
-    BtnCorner.CornerRadius = UDim.new(0, 6)
-    BtnCorner.Parent = SubmitBtn
-
-    SubmitBtn.MouseEnter:Connect(function()
-        TweenService:Create(SubmitBtn, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(41, 128, 255)}):Play()
-    end)
-    SubmitBtn.MouseLeave:Connect(function()
-        TweenService:Create(SubmitBtn, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(31, 111, 235)}):Play()
-    end)
-
-    local success = false
-    SubmitBtn.MouseButton1Click:Connect(function()
-        if IsValidKey(TextBox.Text) then
-            success = true
-            SubmitBtn.Text = "ACCESS GRANTED"
-            TweenService:Create(SubmitBtn, TweenInfo.new(0.3), {BackgroundColor3 = Color3.fromRGB(46, 160, 67)}):Play()
-            
-            task.wait(0.4)
-            TweenService:Create(MainWrapper, TweenInfo.new(0.5, Enum.EasingStyle.Back, Enum.EasingDirection.In), {
-                Size = UDim2.new(0, 0, 0, 0),
-                BackgroundTransparency = 1
-            }):Play()
-            task.wait(0.5)
-            ScreenGui:Destroy()
-        else
-            SubmitBtn.Text = "INVALID KEY"
-            TweenService:Create(SubmitBtn, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(218, 54, 51)}):Play()
-            
-            local originalPos = TextBox.Position
-            for i = 1, 3 do
-                TweenService:Create(TextBox, TweenInfo.new(0.04), {Position = originalPos + UDim2.new(0, 6, 0, 0)}):Play()
-                task.wait(0.04)
-                TweenService:Create(TextBox, TweenInfo.new(0.04), {Position = originalPos - UDim2.new(0, 6, 0, 0)}):Play()
-                task.wait(0.04)
-            end
-            TextBox.Position = originalPos
-
-            task.delay(1.2, function()
-                SubmitBtn.Text = "VERIFY KEY"
-                TweenService:Create(SubmitBtn, TweenInfo.new(0.3), {BackgroundColor3 = Color3.fromRGB(31, 111, 235)}):Play()
-            end)
-        end
-    end)
-
-    repeat task.wait() until success
-end
-
-local repo = "https://raw.githubusercontent.com/deividcomsono/Obsidian/main/"
-
-local Library = loadstring(game:HttpGet(repo .. "Library.lua"))()
-local ThemeManager = loadstring(game:HttpGet(repo .. "addons/ThemeManager.lua"))()
-local SaveManager = loadstring(game:HttpGet(repo .. "addons/SaveManager.lua"))()
-
-local Options = Library.Options
-local Toggles = Library.Toggles
-
-local Window = Library:CreateWindow({
-    Title = "AXE LUA BETA V3",
-    Footer = "AxeXPiad",
-    Icon = 95816097006870,
-    NotifySide = "Right",
-    ShowCustomCursor = true
-})
-
-local Tabs = {
-    Orbitus = Window:AddTab("Orbitus", "user"),
-    Combat = Window:AddTab("Combat / Bypass", "sword"),
-    Visuals = Window:AddTab("Visuals / Move", "eye"),
-    ["UI Settings"] = Window:AddTab("UI Settings", "settings")
-}
-
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
+local CoreGui = game:GetService("CoreGui")
 local LocalPlayer = Players.LocalPlayer
-local Camera = workspace.CurrentCamera
 
-local orbConn, voidSpamConn, noVoidSpamConn, espConn, speedConn, noclipConn, silentAimConn, infJumpConn, rivalsMeleeConn
-local angle = 0
-local voidAngle = 0
-local lastPos = Vector3.new(0, 0, 0)
-local stuckTime = 0
-local activeTargetPos = nil
-
-getgenv().SilentAimEnabled = false
-getgenv().RivalsFastMelee = false
-
-local function getCharacterParts()
-    local char = LocalPlayer.Character
-    if char then
-        return char, char:FindFirstChild("HumanoidRootPart"), char:FindFirstChild("Humanoid")
-    end
-    return nil, nil, nil
+if CoreGui:FindFirstChild("AxeKeySystemUI") then
+    CoreGui.AxeKeySystemUI:Destroy()
 end
 
-local _, initialHRP = getCharacterParts()
-if initialHRP then
-    lastPos = initialHRP.Position
+local playerDevice = "TELÉFONO"
+if UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled then
+    playerDevice = "TELÉFONO"
+elseif UserInputService.GamepadEnabled then
+    playerDevice = "CONSOLA"
+elseif UserInputService.VRService and UserInputService.VRService.VREnabled then
+    playerDevice = "VR"
+elseif UserInputService.KeyboardEnabled then
+    playerDevice = "PC"
 end
 
-local function isEnemy(plr)
-    if not plr or plr == LocalPlayer then return false end
-    local myT = LocalPlayer:GetAttribute("TeamID")
-    local thrT = plr:GetAttribute("TeamID")
-    if myT ~= nil and thrT ~= nil then return tostring(myT) ~= tostring(thrT) end
-    if LocalPlayer.Team and plr.Team then return LocalPlayer.Team ~= plr.Team end
-    return true
-end
+local playerExecutor = identifyexecutor and identifyexecutor() or "Desconocido"
 
-local function isTargetValid(player)
-    if player == LocalPlayer or not player.Character then return false end
-    if not isEnemy(player) then return false end
-    local humanoid = player.Character:FindFirstChild("Humanoid")
-    if not humanoid or humanoid.Health <= 0 then return false end
-    local hrp = player.Character:FindFirstChild("HumanoidRootPart")
-    if not hrp then return false end
-    return true
-end
-
-local function getValidHead(char)
-    local head = char:FindFirstChild("Head")
-    if not head then return nil end
-    local params = RaycastParams.new()
-    params.FilterType = Enum.RaycastFilterType.Exclude
-    params.FilterDescendantsInstances = {LocalPlayer.Character, Camera}
-    local result = workspace:Raycast(Camera.CFrame.Position, (head.Position - Camera.CFrame.Position).Unit * 1000, params)
-    return (result == nil or result.Instance:IsDescendantOf(char)) and head or nil
-end
-
-silentAimConn = RunService.RenderStepped:Connect(function()
-    if not getgenv().SilentAimEnabled then activeTargetPos = nil return end
-    local bestHead = nil
-    local shortestDist = 9e9
-    for _, plr in pairs(Players:GetPlayers()) do
-        local char = plr.Character
-        if char and isEnemy(plr) then
-            local head = char:FindFirstChild("Head")
-            if head then
-                local distFromMe = (head.Position - Camera.CFrame.Position).Magnitude
-                local _, headOnScreen = Camera:WorldToViewportPoint(head.Position)
-                if headOnScreen then
-                    if distFromMe < shortestDist then
-                        local valid = getValidHead(char)
-                        if valid then shortestDist = distFromMe; bestHead = valid end
-                    end
-                end
-            end
-        end
-    end
-    activeTargetPos = bestHead and bestHead.Position or nil
+local fps = 60
+local lastTick = tick()
+RunService.RenderStepped:Connect(function()
+    local currentTick = tick()
+    fps = math.floor(1 / (currentTick - lastTick))
+    lastTick = currentTick
 end)
 
-local old
-old = hookmetamethod(game, "__index", newcclosure(function(self, idx)
-    if getgenv().SilentAimEnabled and activeTargetPos and not checkcaller() and idx == "ViewportSize" and self == Camera then
-        local pos, on = Camera:WorldToViewportPoint(activeTargetPos)
-        if on then return Vector2.new(pos.X * 2, pos.Y * 2) end
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "AxeKeySystemUI"
+ScreenGui.Parent = CoreGui
+ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+local MainFrame = Instance.new("Frame")
+MainFrame.Size = UDim2.new(0, 640, 0, 310)
+MainFrame.Position = UDim2.new(0.5, -320, 0.5, -155)
+MainFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+MainFrame.BorderSizePixel = 0
+MainFrame.Parent = ScreenGui
+
+local UICorner = Instance.new("UICorner")
+UICorner.CornerRadius = UDim.new(0, 10)
+UICorner.Parent = MainFrame
+
+local UIStroke = Instance.new("UIStroke")
+UIStroke.Color = Color3.fromRGB(255, 102, 0)
+UIStroke.Thickness = 2
+UIStroke.Parent = MainFrame
+
+local LeftPanel = Instance.new("Frame")
+LeftPanel.Size = UDim2.new(0, 230, 1, -20)
+LeftPanel.Position = UDim2.new(0, 10, 0, 10)
+LeftPanel.BackgroundColor3 = Color3.fromRGB(22, 22, 22)
+LeftPanel.BorderSizePixel = 0
+LeftPanel.Parent = MainFrame
+
+local LeftCorner = Instance.new("UICorner")
+LeftCorner.CornerRadius = UDim.new(0, 6)
+LeftCorner.Parent = LeftPanel
+
+local CopyDiscordBtn = Instance.new("TextButton")
+CopyDiscordBtn.Size = UDim2.new(1, -16, 0, 42)
+CopyDiscordBtn.Position = UDim2.new(0, 8, 1, -50)
+CopyDiscordBtn.BackgroundColor3 = Color3.fromRGB(255, 102, 0)
+CopyDiscordBtn.Text = "discord.gg/tvYWHS2B8"
+CopyDiscordBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+CopyDiscordBtn.TextSize = 13
+CopyDiscordBtn.Font = Enum.Font.GothamBold
+CopyDiscordBtn.Parent = LeftPanel
+
+local CopyBtnCorner = Instance.new("UICorner")
+CopyBtnCorner.CornerRadius = UDim.new(0, 6)
+CopyBtnCorner.Parent = CopyDiscordBtn
+
+CopyDiscordBtn.MouseButton1Click:Connect(function()
+    pcall(function() setclipboard("discord.gg/tvYWHS2B8") end)
+    CopyDiscordBtn.Text = "¡Copiado!"
+    task.wait(1.5)
+    CopyDiscordBtn.Text = "discord.gg/tvYWHS2B8"
+end)
+
+local InfoDesc = Instance.new("TextLabel")
+InfoDesc.Size = UDim2.new(1, -16, 1, -60)
+InfoDesc.Position = UDim2.new(0, 8, 0, 10)
+InfoDesc.BackgroundTransparency = 1
+InfoDesc.TextColor3 = Color3.fromRGB(220, 220, 220)
+InfoDesc.TextSize = 14
+InfoDesc.Font = Enum.Font.GothamBold
+InfoDesc.TextXAlignment = Enum.TextXAlignment.Left
+InfoDesc.TextYAlignment = Enum.TextYAlignment.Top
+InfoDesc.Parent = LeftPanel
+
+task.spawn(function()
+    while ScreenGui.Parent do
+        InfoDesc.Text = string.format(
+            "• Usuario: %s\n• Executor: %s\n• Dispositivo: %s\n• FPS: %d\n\n• ¿No Key?\n  Consigue tu key en:",
+            LocalPlayer.Name, playerExecutor, playerDevice, math.clamp(fps, 1, 300)
+        )
+        task.wait(0.5)
     end
-    return old(self, idx)
-end))
+end)
 
-local OrbitBox = Tabs.Orbitus:AddLeftGroupbox("Orbit Controls")
+local RightContainer = Instance.new("Frame")
+RightContainer.Size = UDim2.new(1, -250, 1, 0)
+RightContainer.Position = UDim2.new(0, 250, 0, 0)
+RightContainer.BackgroundTransparency = 1
+RightContainer.Parent = MainFrame
 
-local orbitModes = {
-    "UEKILLERS V2", "BAITING", "CLASSIC",
-    "CIRCLE FAST", "CIRCLE SLOW", "CIRCLE WIDE", "CIRCLE TIGHT",
-    "FIGURE EIGHT", "SPIRAL IN", "SPIRAL OUT", "ZIG ZAG",
-    "VERTICAL ORBIT", "BOUNCE ORBIT", "RANDOM TELEPORT", "ABOVE TARGET",
-    "UNDER TARGET", "BEHIND TARGET", "FRONT TARGET", "SIDE LEFT",
-    "SIDE RIGHT", "PENDULUM", "WAVE ORBIT", "CHAOS ORBIT", "STALKER",
-    "DODGE ORBIT", "SHADOW ORBIT", "PHANTOM ORBIT", "HYPER ORBIT",
-    "ULTRA SPIN", "SPEED ORBIT", "GHOST ORBIT", "BLITZ ORBIT",
-    "CYBER ORBIT", "MATRIX ORBIT", "NEON ORBIT", "PLASMA ORBIT",
-    "VOID ORBIT", "QUANTUM ORBIT", "TIMESHIFT ORBIT", "STORM ORBIT",
-    "LIGHTNING ORBIT", "METEOR ORBIT", "COMET ORBIT", "GALAXY ORBIT",
-    "SOLAR ORBIT", "LUNAR ORBIT", "ECLIPSE ORBIT", "SUPERNOVA ORBIT",
-    "APEX ORBIT", "ZENITH ORBIT", "NADIR ORBIT", "OMEGA ORBIT"
+local Title = Instance.new("TextLabel")
+Title.Size = UDim2.new(1, 0, 0, 50)
+Title.BackgroundTransparency = 1
+Title.Text = "AXE LUA BETA V3"
+Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+Title.TextSize = 20
+Title.Font = Enum.Font.GothamBold
+Title.Parent = RightContainer
+
+local KeyBox = Instance.new("TextBox")
+KeyBox.Size = UDim2.new(1, -30, 0, 50)
+KeyBox.Position = UDim2.new(0, 15, 0, 75)
+KeyBox.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+KeyBox.PlaceholderText = "Introduce tu clave..."
+KeyBox.Text = ""
+KeyBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+KeyBox.PlaceholderColor3 = Color3.fromRGB(120, 120, 120)
+KeyBox.TextSize = 15
+KeyBox.Font = Enum.Font.Gotham
+KeyBox.Parent = RightContainer
+
+local BoxCorner = Instance.new("UICorner")
+BoxCorner.CornerRadius = UDim.new(0, 6)
+BoxCorner.Parent = KeyBox
+
+local VerifyBtn = Instance.new("TextButton")
+VerifyBtn.Size = UDim2.new(1, -30, 0, 50)
+VerifyBtn.Position = UDim2.new(0, 15, 0, 140)
+VerifyBtn.BackgroundColor3 = Color3.fromRGB(255, 102, 0)
+VerifyBtn.Text = "VERIFY"
+VerifyBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+VerifyBtn.TextSize = 15
+VerifyBtn.Font = Enum.Font.GothamBold
+VerifyBtn.Parent = RightContainer
+
+local BtnCorner = Instance.new("UICorner")
+BtnCorner.CornerRadius = UDim.new(0, 6)
+BtnCorner.Parent = VerifyBtn
+
+local StatusLabel = Instance.new("TextLabel")
+StatusLabel.Size = UDim2.new(1, 0, 0, 30)
+StatusLabel.Position = UDim2.new(0, 0, 0, 205)
+StatusLabel.BackgroundTransparency = 1
+StatusLabel.Text = ""
+StatusLabel.TextColor3 = Color3.fromRGB(255, 50, 50)
+StatusLabel.TextSize = 14
+StatusLabel.Font = Enum.Font.Gotham
+StatusLabel.Parent = RightContainer
+
+local VALID_KEYS = {
+    ["9138193819203881193I1918282QI0E819"] = true,
+    ["19EU1OEKWJQOEJ1OWJEJQPEJWJQIQ"] = true,
+    ["a9B8c7D6e5F4g3H2i1J0k9L8m7N6o5P4"] = true,
+    ["XyZ9876543210AbCdEfGhIjKlMnOpQrS"] = true,
+    ["1234567890abcdefghijklmnopqrstuvwx"] = true,
+     ["9173719271936193719371936293300003"] = true,
+    ["0173194781936219836381174817463816"] = true,
+    ["018391937193U192U391738183636182638"] = true,
+    ["199317391639163916391Y391637193619378"] = true,
+    ["0174918373910283719284739288128373810"] = true,
+    ["10381929371829381710OWS9Q9WL2K20WJW"] = true,
+    ["S9S8Q9W9S9Q9W9SOQO20WOQL2WKWIW9QO"] = true,
+    ["0QIWQ020K1P20WP1O29E919EIEI1929W8EU3U"] = true,
 }
 
-OrbitBox:AddDropdown("OrbitMode", {
-    Values = orbitModes,
-    Default = 1,
-    Text = "Orbit Mode"
-})
+VerifyBtn.MouseButton1Click:Connect(function()
+    if VALID_KEYS[KeyBox.Text] then
+        StatusLabel.TextColor3 = Color3.fromRGB(0, 255, 100)
+        StatusLabel.Text = "¡Clave correcta! Cargando..."
+        task.wait(0.3)
+        ScreenGui:Destroy()
+        
+        local repo = "https://raw.githubusercontent.com/deividcomsono/Obsidian/main/"
+        local Library = loadstring(game:HttpGet(repo .. "Library.lua"))()
+        local ThemeManager = loadstring(game:HttpGet(repo .. "addons/ThemeManager.lua"))()
+        local SaveManager = loadstring(game:HttpGet(repo .. "addons/SaveManager.lua"))()
 
-OrbitBox:AddToggle("OrbitEnabled", {
-    Text = "Orbitar",
-    Default = false,
-    Callback = function(v)
-        if v then
-            Toggles.VoidSpam:SetValue(false)
-            Toggles.NoVoidSpam:SetValue(false)
-            
-            if orbConn then orbConn:Disconnect() end
-            orbConn = RunService.Heartbeat:Connect(function(dt)
-                pcall(function()
-                    local _, hrp = getCharacterParts()
-                    if not hrp then return end
-                    
-                    local closest, dist = nil, math.huge
-                    for _, p in pairs(Players:GetPlayers()) do
-                        if isTargetValid(p) then
-                            local d = (hrp.Position - p.Character.HumanoidRootPart.Position).Magnitude
-                            if d < dist then 
-                                dist = d 
-                                closest = p 
-                            end
-                        end
-                    end
-                    
-                    if closest and closest.Character then
-                        local enemyHrp = closest.Character.HumanoidRootPart
-                        local mode = Options.OrbitMode.Value
-                        angle = angle + dt * 5
-                        
-                        if mode == "UEKILLERS V2" then
-                            local enemyLook = enemyHrp.CFrame.LookVector
-                            enemyLook = Vector3.new(enemyLook.X, 0, enemyLook.Z).Unit
-                            hrp.CFrame = CFrame.new(enemyHrp.Position + (enemyLook * 3) + Vector3.new(0, 0.5, 0), enemyHrp.Position)
-                            Camera.CFrame = CFrame.new(Camera.CFrame.Position, enemyHrp.Position)
-                        elseif mode == "BAITING" then
-                            hrp.CFrame = CFrame.new(enemyHrp.Position + Vector3.new(0, -4, 0), enemyHrp.Position)
-                            Camera.CFrame = CFrame.new(Camera.CFrame.Position, enemyHrp.Position)
-                        elseif mode == "CLASSIC" then
-                            hrp.CFrame = CFrame.new(enemyHrp.Position + Vector3.new(math.cos(angle) * 3, 4, math.sin(angle) * 3), enemyHrp.Position)
-                            Camera.CFrame = CFrame.new(Camera.CFrame.Position, enemyHrp.Position)
-                        elseif mode == "CIRCLE FAST" then
-                            hrp.CFrame = CFrame.new(enemyHrp.Position + Vector3.new(math.cos(angle * 2.5) * 4, 2, math.sin(angle * 2.5) * 4), enemyHrp.Position)
-                        elseif mode == "CIRCLE SLOW" then
-                            hrp.CFrame = CFrame.new(enemyHrp.Position + Vector3.new(math.cos(angle * 0.5) * 6, 2, math.sin(angle * 0.5) * 6), enemyHrp.Position)
-                        elseif mode == "CIRCLE WIDE" then
-                            hrp.CFrame = CFrame.new(enemyHrp.Position + Vector3.new(math.cos(angle) * 10, 3, math.sin(angle) * 10), enemyHrp.Position)
-                        elseif mode == "CIRCLE TIGHT" then
-                            hrp.CFrame = CFrame.new(enemyHrp.Position + Vector3.new(math.cos(angle * 3) * 1.5, 1, math.sin(angle * 3) * 1.5), enemyHrp.Position)
-                        elseif mode == "FIGURE EIGHT" then
-                            local x = math.sin(angle) * 5
-                            local z = math.sin(angle * 2) * 5
-                            hrp.CFrame = CFrame.new(enemyHrp.Position + Vector3.new(x, 2, z), enemyHrp.Position)
-                        elseif mode == "SPIRAL IN" then
-                            local r = math.max(1, 10 - (angle % 10))
-                            hrp.CFrame = CFrame.new(enemyHrp.Position + Vector3.new(math.cos(angle) * r, 2, math.sin(angle) * r), enemyHrp.Position)
-                        elseif mode == "SPIRAL OUT" then
-                            local r = (angle % 10) + 1
-                            hrp.CFrame = CFrame.new(enemyHrp.Position + Vector3.new(math.cos(angle) * r, 2, math.sin(angle) * r), enemyHrp.Position)
-                        elseif mode == "ZIG ZAG" then
-                            local offset = Vector3.new(math.sin(angle * 5) * 4, 2, math.cos(angle * 3) * 4)
-                            hrp.CFrame = CFrame.new(enemyHrp.Position + offset, enemyHrp.Position)
-                        elseif mode == "VERTICAL ORBIT" then
-                            hrp.CFrame = CFrame.new(enemyHrp.Position + Vector3.new(2, math.sin(angle) * 5, math.cos(angle) * 5), enemyHrp.Position)
-                        elseif mode == "BOUNCE ORBIT" then
-                            hrp.CFrame = CFrame.new(enemyHrp.Position + Vector3.new(math.cos(angle) * 4, math.abs(math.sin(angle)) * 6, math.sin(angle) * 4), enemyHrp.Position)
-                        elseif mode == "RANDOM TELEPORT" then
-                            if math.random() < 0.2 then
-                                hrp.CFrame = CFrame.new(enemyHrp.Position + Vector3.new(math.random(-5, 5), math.random(0, 3), math.random(-5, 5)), enemyHrp.Position)
-                            end
-                        elseif mode == "ABOVE TARGET" then
-                            hrp.CFrame = CFrame.new(enemyHrp.Position + Vector3.new(0, 8, 0), enemyHrp.Position)
-                        elseif mode == "UNDER TARGET" then
-                            hrp.CFrame = CFrame.new(enemyHrp.Position + Vector3.new(0, -6, 0), enemyHrp.Position)
-                        elseif mode == "BEHIND TARGET" then
-                            local back = -enemyHrp.CFrame.LookVector * 4
-                            hrp.CFrame = CFrame.new(enemyHrp.Position + back + Vector3.new(0, 1, 0), enemyHrp.Position)
-                        elseif mode == "FRONT TARGET" then
-                            local front = enemyHrp.CFrame.LookVector * 4
-                            hrp.CFrame = CFrame.new(enemyHrp.Position + front + Vector3.new(0, 1, 0), enemyHrp.Position)
-                        elseif mode == "SIDE LEFT" then
-                            local left = -enemyHrp.CFrame.RightVector * 4
-                            hrp.CFrame = CFrame.new(enemyHrp.Position + left + Vector3.new(0, 1, 0), enemyHrp.Position)
-                        elseif mode == "SIDE RIGHT" then
-                            local right = enemyHrp.CFrame.RightVector * 4
-                            hrp.CFrame = CFrame.new(enemyHrp.Position + right + Vector3.new(0, 1, 0), enemyHrp.Position)
-                        elseif mode == "PENDULUM" then
-                            hrp.CFrame = CFrame.new(enemyHrp.Position + Vector3.new(math.sin(angle) * 6, 2, 2), enemyHrp.Position)
-                        elseif mode == "WAVE ORBIT" then
-                            hrp.CFrame = CFrame.new(enemyHrp.Position + Vector3.new(math.cos(angle) * 5, math.sin(angle * 2) * 3, math.sin(angle) * 5), enemyHrp.Position)
-                        elseif mode == "CHAOS ORBIT" then
-                            hrp.CFrame = CFrame.new(enemyHrp.Position + Vector3.new(math.random(-6, 6), math.random(-2, 6), math.random(-6, 6)), enemyHrp.Position)
-                        elseif mode == "STALKER" then
-                            local back = -enemyHrp.CFrame.LookVector * 8
-                            hrp.CFrame = CFrame.new(enemyHrp.Position + back + Vector3.new(0, 2, 0), enemyHrp.Position)
-                        elseif mode == "DODGE ORBIT" then
-                            hrp.CFrame = CFrame.new(enemyHrp.Position + Vector3.new(math.cos(angle * 4) * 5, 1, math.sin(angle * 4) * 5), enemyHrp.Position)
-                        elseif mode == "SHADOW ORBIT" then
-                            hrp.CFrame = CFrame.new(enemyHrp.Position + Vector3.new(math.cos(angle) * 3, -1, math.sin(angle) * 3), enemyHrp.Position)
-                        elseif mode == "PHANTOM ORBIT" then
-                            hrp.CFrame = CFrame.new(enemyHrp.Position + Vector3.new(math.sin(angle * 1.5) * 7, math.cos(angle) * 4, math.cos(angle * 1.5) * 7), enemyHrp.Position)
-                        elseif mode == "HYPER ORBIT" then
-                            hrp.CFrame = CFrame.new(enemyHrp.Position + Vector3.new(math.cos(angle * 5) * 3, 2, math.sin(angle * 5) * 3), enemyHrp.Position)
-                        elseif mode == "ULTRA SPIN" then
-                            hrp.CFrame = CFrame.new(enemyHrp.Position + Vector3.new(math.cos(angle * 8) * 2, 0, math.sin(angle * 8) * 2), enemyHrp.Position)
-                        elseif mode == "SPEED ORBIT" then
-                            hrp.CFrame = CFrame.new(enemyHrp.Position + Vector3.new(math.cos(angle * 6) * 4, 3, math.sin(angle * 6) * 4), enemyHrp.Position)
-                        elseif mode == "GHOST ORBIT" then
-                            hrp.CFrame = CFrame.new(enemyHrp.Position + Vector3.new(math.sin(angle) * 8, 5, math.cos(angle) * 8), enemyHrp.Position)
-                        elseif mode == "BLITZ ORBIT" then
-                            hrp.CFrame = CFrame.new(enemyHrp.Position + Vector3.new(math.cos(angle * 7) * 2.5, 1, math.sin(angle * 7) * 2.5), enemyHrp.Position)
-                        elseif mode == "CYBER ORBIT" then
-                            hrp.CFrame = CFrame.new(enemyHrp.Position + Vector3.new(math.sin(angle * 3) * 5, math.sin(angle * 3) * 2, math.cos(angle * 3) * 5), enemyHrp.Position)
-                        elseif mode == "MATRIX ORBIT" then
-                            hrp.CFrame = CFrame.new(enemyHrp.Position + Vector3.new(math.cos(angle * 2) * 4, math.cos(angle * 5) * 3, math.sin(angle * 2) * 4), enemyHrp.Position)
-                        elseif mode == "NEON ORBIT" then
-                            hrp.CFrame = CFrame.new(enemyHrp.Position + Vector3.new(math.sin(angle) * 4, 2, math.cos(angle) * 4), enemyHrp.Position)
-                        elseif mode == "PLASMA ORBIT" then
-                            hrp.CFrame = CFrame.new(enemyHrp.Position + Vector3.new(math.cos(angle * 3.5) * 3.5, 2.5, math.sin(angle * 3.5) * 3.5), enemyHrp.Position)
-                        elseif mode == "VOID ORBIT" then
-                            hrp.CFrame = CFrame.new(enemyHrp.Position + Vector3.new(math.sin(angle * 0.8) * 12, 10, math.cos(angle * 0.8) * 12), enemyHrp.Position)
-                        elseif mode == "QUANTUM ORBIT" then
-                            hrp.CFrame = CFrame.new(enemyHrp.Position + Vector3.new(math.cos(angle * 4.5) * 3, math.sin(angle * 4.5) * 3, math.cos(angle * 2) * 3), enemyHrp.Position)
-                        elseif mode == "TIMESHIFT ORBIT" then
-                            hrp.CFrame = CFrame.new(enemyHrp.Position + Vector3.new(math.sin(angle * 1.2) * 5, math.abs(math.cos(angle)) * 4, math.cos(angle * 1.2) * 5), enemyHrp.Position)
-                        elseif mode == "STORM ORBIT" then
-                            hrp.CFrame = CFrame.new(enemyHrp.Position + Vector3.new(math.cos(angle * 5) * 6, math.sin(angle * 3) * 4, math.sin(angle * 5) * 6), enemyHrp.Position)
-                        elseif mode == "LIGHTNING ORBIT" then
-                            hrp.CFrame = CFrame.new(enemyHrp.Position + Vector3.new(math.sin(angle * 6) * 3, math.random(-2, 5), math.cos(angle * 6) * 3), enemyHrp.Position)
-                        elseif mode == "METEOR ORBIT" then
-                            hrp.CFrame = CFrame.new(enemyHrp.Position + Vector3.new(math.cos(angle) * 7, 8 - (angle % 8), math.sin(angle) * 7), enemyHrp.Position)
-                        elseif mode == "COMET ORBIT" then
-                            hrp.CFrame = CFrame.new(enemyHrp.Position + Vector3.new(math.sin(angle * 2) * 9, 3, math.cos(angle * 2) * 9), enemyHrp.Position)
-                        elseif mode == "GALAXY ORBIT" then
-                            hrp.CFrame = CFrame.new(enemyHrp.Position + Vector3.new(math.cos(angle * 0.6) * 15, math.sin(angle * 0.6) * 5, math.sin(angle * 0.6) * 15), enemyHrp.Position)
-                        elseif mode == "SOLAR ORBIT" then
-                            hrp.CFrame = CFrame.new(enemyHrp.Position + Vector3.new(math.sin(angle * 0.4) * 8, 4, math.cos(angle * 0.4) * 8), enemyHrp.Position)
-                        elseif mode == "LUNAR ORBIT" then
-                            hrp.CFrame = CFrame.new(enemyHrp.Position + Vector3.new(math.cos(angle * 1.1) * 5, 3, math.sin(angle * 1.1) * 5), enemyHrp.Position)
-                        elseif mode == "ECLIPSE ORBIT" then
-                            hrp.CFrame = CFrame.new(enemyHrp.Position + Vector3.new(math.sin(angle * 2) * 4, math.cos(angle * 2) * 4, 0), enemyHrp.Position)
-                        elseif mode == "SUPERNOVA ORBIT" then
-                            hrp.CFrame = CFrame.new(enemyHrp.Position + Vector3.new(math.cos(angle * 4) * (angle % 10), math.sin(angle * 4) * 2, math.sin(angle * 4) * (angle % 10)), enemyHrp.Position)
-                        elseif mode == "APEX ORBIT" then
-                            hrp.CFrame = CFrame.new(enemyHrp.Position + Vector3.new(math.cos(angle * 2.2) * 3.5, 6, math.sin(angle * 2.2) * 3.5), enemyHrp.Position)
-                        elseif mode == "ZENITH ORBIT" then
-                            hrp.CFrame = CFrame.new(enemyHrp.Position + Vector3.new(0, 10, math.sin(angle * 2) * 4), enemyHrp.Position)
-                        elseif mode == "NADIR ORBIT" then
-                            hrp.CFrame = CFrame.new(enemyHrp.Position + Vector3.new(0, -8, math.cos(angle * 2) * 4), enemyHrp.Position)
-                        elseif mode == "OMEGA ORBIT" then
-                            hrp.CFrame = CFrame.new(enemyHrp.Position + Vector3.new(math.sin(angle * 3) * 6, math.sin(angle * 5) * 3, math.cos(angle * 3) * 6), enemyHrp.Position)
-                        end
-                        
-                        if mode ~= "UEKILLERS V2" and mode ~= "BAITING" and mode ~= "CLASSIC" then
-                            Camera.CFrame = CFrame.new(Camera.CFrame.Position, enemyHrp.Position)
-                        end
-                    end
-                end)
-            end)
-        else
-            if orbConn then orbConn:Disconnect() orbConn = nil end
-        end
-    end
-})
+        local Options = Library.Options
+        local Toggles = Library.Toggles
 
-local SafeBox = Tabs.Orbitus:AddRightGroupbox("Safe / Void Options")
+        local Window = Library:CreateWindow({
+            Title = "AXE LUA BETA V3",
+            Footer = "AxeXPiad",
+            Icon = 95816097006870,
+            NotifySide = "Right",
+            ShowCustomCursor = true
+        })
 
-SafeBox:AddToggle("VoidSpam", {
-    Text = "VoidSpam",
-    Default = false,
-    Callback = function(v)
-        if v then
-            Toggles.OrbitEnabled:SetValue(false)
-            Toggles.NoVoidSpam:SetValue(false)
-            
-            if voidSpamConn then voidSpamConn:Disconnect() end
-            voidSpamConn = RunService.RenderStepped:Connect(function(dt)
-                pcall(function()
-                    local _, hrp = getCharacterParts()
-                    if hrp then
-                        voidAngle = voidAngle + (dt * 100000.0)
-                        local x = math.cos(voidAngle) * 5000
-                        local z = math.sin(voidAngle) * 5000
-                        hrp.CFrame = CFrame.new(Vector3.new(x, 500, z))
-                        hrp.AssemblyLinearVelocity = Vector3.zero
-                    end
-                end)
-            end)
-        else
-            if voidSpamConn then voidSpamConn:Disconnect() voidSpamConn = nil end
-        end
-    end
-})
+        local Tabs = {
+            Orbitus = Window:AddTab("RAGE AND VOID", "user"),
+            Combat = Window:AddTab("COMBATE", "sword"),
+            Visuals = Window:AddTab("UTILIDADES", "eye"),
+            ["UI Settings"] = Window:AddTab("CONFIGS", "settings")
+        }
 
-SafeBox:AddToggle("NoVoidSpam", {
-    Text = "NoVoidSpam",
-    Default = false,
-    Callback = function(v)
-        if v then
-            Toggles.OrbitEnabled:SetValue(false)
-            Toggles.VoidSpam:SetValue(false)
-            
-            if noVoidSpamConn then noVoidSpamConn:Disconnect() end
-            noVoidSpamConn = RunService.RenderStepped:Connect(function(dt)
-                pcall(function()
-                    local _, hrp = getCharacterParts()
-                    if not hrp then return end
-                    
-                    local enemyNearby = false
-                    for _, p in pairs(Players:GetPlayers()) do
-                        if isTargetValid(p) then
-                            local d = (hrp.Position - p.Character.HumanoidRootPart.Position).Magnitude
-                            if d < 40 then
-                                enemyNearby = true
-                                break
-                            end
-                        end
-                    end
+        local Camera = workspace.CurrentCamera
+        local orbConn, voidSpamConn, noVoidSpamConn, espConn, speedConn, noclipConn, silentAimConn, infJumpConn, ragebotConn, chainsawConn
+        local angle = 0
+        local voidAngle = 0
+        local lastPos = Vector3.new(0, 0, 0)
+        local stuckTime = 0
+        local activeTargetPos = nil
 
-                    local movedDist = (hrp.Position - lastPos).Magnitude
-                    if movedDist < 1.5 then
-                        stuckTime = stuckTime + dt
-                    else
-                        stuckTime = 0
-                        lastPos = hrp.Position
-                    end
+        getgenv().SilentAimEnabled = false
+        getgenv().RivalsFastMelee = false
+        getgenv().BypassChainsawEnabled = false
 
-                    if enemyNearby or stuckTime > 0 then
-                        hrp.AssemblyLinearVelocity = Vector3.zero
-                    else
-                        voidAngle = voidAngle + (dt * 250000)
-                        local x = math.cos(voidAngle) * 1000
-                        local z = math.sin(voidAngle) * 1000
-                        hrp.CFrame = CFrame.new(Vector3.new(x, 500, z))
-                        hrp.AssemblyLinearVelocity = Vector3.zero
-                    end
-                end)
-            end)
-        else
-            if noVoidSpamConn then noVoidSpamConn:Disconnect() noVoidSpamConn = nil end
-        end
-    end
-})
+        local cachedMeleeTables = {}
+        local meleeCacheInitialized = false
 
-local CombatBox = Tabs.Combat:AddLeftGroupbox("Silent Aim & Combat")
-
-CombatBox:AddToggle("SilentAim", {
-    Text = "Silent Aim",
-    Default = false,
-    Callback = function(v)
-        getgenv().SilentAimEnabled = v
-    end
-})
-
-local BypassBox = Tabs.Combat:AddRightGroupbox("Bypasses")
-
-local bypassActive = {slingshot = false, daggers = false, bow = false}
-
-local function updateBypasses(activeKey)
-    for key in pairs(bypassActive) do
-        if key ~= activeKey then bypassActive[key] = false end
-    end
-end
-
-BypassBox:AddToggle("BypassSling", {
-    Text = "Bypass Slingshot",
-    Default = false,
-    Callback = function(v)
-        bypassActive.slingshot = v
-        if v then updateBypasses("slingshot") end
-    end
-})
-
-BypassBox:AddToggle("BypassDaggers", {
-    Text = "Bypass Daggers",
-    Default = false,
-    Callback = function(v)
-        bypassActive.daggers = v
-        if v then updateBypasses("daggers") end
-    end
-})
-
-BypassBox:AddToggle("BypassBow", {
-    Text = "Bypass Bow",
-    Default = false,
-    Callback = function(v)
-        bypassActive.bow = v
-        if v then updateBypasses("bow") end
-    end
-})
-
-local CombatMiscBox = Tabs.Combat:AddRightGroupbox("Misc Combat")
-
-CombatMiscBox:AddToggle("NoSpam", {
-    Text = "No Spam (Mute Sounds)",
-    Default = false,
-    Callback = function(v)
-        pcall(function()
-            for _, obj in pairs(workspace:GetDescendants()) do
-                if obj:IsA("Sound") then
-                    obj.Volume = v and 0 or 0.5
-                end
-            end
-        end)
-    end
-})
-
-local function toggleTableAttribute(attribute, value)
-    for _, gcVal in pairs(getgc(true)) do
-        if type(gcVal) == "table" and rawget(gcVal, attribute) then
-            gcVal[attribute] = value
-        end
-    end
-end
-
-CombatMiscBox:AddToggle("ModGun", {
-    Text = "Rapid Fire",
-    Default = false,
-    Callback = function(v)
-        if v then
-            toggleTableAttribute("ShootCooldown", 0)
-            toggleTableAttribute("ShootSpread", 0)
-            toggleTableAttribute("ShootRecoil", 0)
-        end
-    end
-})
-
-CombatMiscBox:AddToggle("RivalsFastMelee", {
-    Text = "fast mele",
-    Default = false,
-    Callback = function(v)
-        getgenv().RivalsFastMelee = v
-        if v then
-            if rivalsMeleeConn then rivalsMeleeConn:Disconnect() end
-            rivalsMeleeConn = RunService.Heartbeat:Connect(function()
+        local function cacheMeleeTables()
+            if meleeCacheInitialized then return end
+            meleeCacheInitialized = true
+            task.spawn(function()
                 pcall(function()
                     for _, gcVal in pairs(getgc(true)) do
                         if type(gcVal) == "table" then
+                            if rawget(gcVal, "MeleeCooldown") or rawget(gcVal, "SwingCooldown") or rawget(gcVal, "SlashCooldown") or rawget(gcVal, "AttackCooldown") or rawget(gcVal, "HitCooldown") then
+                                table.insert(cachedMeleeTables, gcVal)
+                            end
+                        end
+                    end
+                end)
+            end)
+        end
+
+        local function getCharacterParts()
+            local char = LocalPlayer.Character
+            if char then
+                return char, char:FindFirstChild("HumanoidRootPart"), char:FindFirstChild("Humanoid")
+            end
+            return nil, nil, nil
+        end
+
+        local _, initialHRP = getCharacterParts()
+        if initialHRP then lastPos = initialHRP.Position end
+
+        local function isEnemy(plr)
+            if not plr or plr == LocalPlayer then return false end
+            local myT = LocalPlayer:GetAttribute("TeamID")
+            local thrT = plr:GetAttribute("TeamID")
+            if myT ~= nil and thrT ~= nil then return tostring(myT) ~= tostring(thrT) end
+            if LocalPlayer.Team and plr.Team then return LocalPlayer.Team ~= plr.Team end
+            return true
+        end
+
+        local function isTargetValid(player)
+            if player == LocalPlayer or not player.Character then return false end
+            if not isEnemy(player) then return false end
+            local humanoid = player.Character:FindFirstChild("Humanoid")
+            if not humanoid or humanoid.Health <= 0 then return false end
+            local hrp = player.Character:FindFirstChild("HumanoidRootPart")
+            if not hrp then return false end
+            return true
+        end
+        getgenv().IsTargetValid = isTargetValid
+
+        local function getValidHead(char)
+            local head = char:FindFirstChild("Head")
+            if not head then return nil end
+            local params = RaycastParams.new()
+            params.FilterType = Enum.RaycastFilterType.Exclude
+            params.FilterDescendantsInstances = {LocalPlayer.Character, Camera}
+            local result = workspace:Raycast(Camera.CFrame.Position, (head.Position - Camera.CFrame.Position).Unit * 1000, params)
+            return (result == nil or result.Instance:IsDescendantOf(char)) and head or nil
+        end
+
+        local function equipMelee()
+            pcall(function()
+                local backpack = LocalPlayer:FindFirstChildOfClass("Backpack")
+                local char = LocalPlayer.Character
+                if not backpack or not char then return end
+                
+                local toolToEquip = nil
+                for _, item in ipairs(backpack:GetChildren()) do
+                    if item:IsA("Tool") then
+                        local nameLower = string.lower(item.Name)
+                        if nameLower:find("melee") or nameLower:find("knife") or nameLower:find("blade") or nameLower:find("sword") or nameLower:find("chainsaw") or nameLower:find("dagger") then
+                            toolToEquip = item
+                            break
+                        end
+                    end
+                end
+                
+                if not toolToEquip then
+                    for _, item in ipairs(backpack:GetChildren()) do
+                        if item:IsA("Tool") then
+                            toolToEquip = item
+                            break
+                        end
+                    end
+                end
+
+                if toolToEquip and not char:FindFirstChild(toolToEquip.Name) then
+                    toolToEquip.Parent = char
+                end
+            end)
+        end
+
+        silentAimConn = RunService.RenderStepped:Connect(function()
+            if not getgenv().SilentAimEnabled then activeTargetPos = nil return end
+            local bestHead = nil
+            local shortestDist = 9e9
+            for _, plr in pairs(Players:GetPlayers()) do
+                local char = plr.Character
+                if char and isEnemy(plr) then
+                    local head = char:FindFirstChild("Head")
+                    if head then
+                        local distFromMe = (head.Position - Camera.CFrame.Position).Magnitude
+                        local _, headOnScreen = Camera:WorldToViewportPoint(head.Position)
+                        if headOnScreen and distFromMe < shortestDist then
+                            if getValidHead(char) then
+                                shortestDist = distFromMe
+                                bestHead = head
+                            end
+                        end
+                    end
+                end
+            end
+            activeTargetPos = bestHead and bestHead.Position or nil
+        end)
+
+        local old
+        old = hookmetamethod(game, "__index", newcclosure(function(self, idx)
+            if getgenv().SilentAimEnabled and activeTargetPos and not checkcaller() and idx == "ViewportSize" and self == Camera then
+                local pos, on = Camera:WorldToViewportPoint(activeTargetPos)
+                if on then return Vector2.new(pos.X * 2, pos.Y * 2) end
+            end
+            return old(self, idx)
+        end))
+
+        local OrbitBox = Tabs.Orbitus:AddLeftGroupbox("Orbit Controls")
+        local orbitModes = {
+            "UEKILLERS V2", "BAITING", "CLASSIC", "CIRCLE FAST", "CIRCLE SLOW",
+            "CIRCLE WIDE", "CIRCLE TIGHT", "FIGURE EIGHT", "SPIRAL IN", "SPIRAL OUT",
+            "ZIG ZAG", "VERTICAL ORBIT", "BOUNCE ORBIT", "RANDOM TELEPORT", "ABOVE TARGET",
+            "UNDER TARGET", "BEHIND TARGET", "FRONT TARGET", "SIDE LEFT", "SIDE RIGHT",
+            "PENDULUM", "WAVE ORBIT", "CHAOS ORBIT", "STALKER", "DODGE ORBIT",
+            "SHADOW ORBIT", "PHANTOM ORBIT", "HYPER ORBIT", "ULTRA SPIN", "SPEED ORBIT",
+            "GHOST ORBIT", "BLITZ ORBIT", "CYBER ORBIT", "MATRIX ORBIT", "NEON ORBIT",
+            "PLASMA ORBIT", "VOID ORBIT", "QUANTUM ORBIT", "TIMESHIFT ORBIT", "STORM ORBIT",
+            "LIGHTNING ORBIT", "METEOR ORBIT", "COMET ORBIT", "GALAXY ORBIT", "SOLAR ORBIT",
+            "LUNAR ORBIT", "ECLIPSE ORBIT", "SUPERNOVA ORBIT", "APEX ORBIT", "ZENITH ORBIT",
+            "NADIR ORBIT", "OMEGA ORBIT"
+        }
+
+        OrbitBox:AddDropdown("OrbitMode", { Values = orbitModes, Default = 1, Text = "RAGEBOT MODE" })
+        OrbitBox:AddToggle("OrbitEnabled", {
+            Text = "ORBIT",
+            Default = false,
+            Callback = function(v)
+                if v then
+                    Toggles.VoidSpam:SetValue(false)
+                    Toggles.NoVoidSpam:SetValue(false)
+                    if orbConn then orbConn:Disconnect() end
+                    orbConn = RunService.Heartbeat:Connect(function(dt)
+                        pcall(function()
+                            local _, hrp = getCharacterParts()
+                            if not hrp then return end
+                            local closest, dist = nil, math.huge
+                            for _, p in pairs(Players:GetPlayers()) do
+                                if isTargetValid(p) then
+                                    local d = (hrp.Position - p.Character.HumanoidRootPart.Position).Magnitude
+                                    if d < dist then dist = d; closest = p end
+                                end
+                            end
+                            if closest and closest.Character then
+                                local enemyHrp = closest.Character.HumanoidRootPart
+                                local mode = Options.OrbitMode.Value
+                                angle = angle + dt * 5
+                                local targetCF = enemyHrp.CFrame
+                                
+                                if mode == "UEKILLERS V2" then
+                                    local look = Vector3.new(enemyHrp.CFrame.LookVector.X, 0, enemyHrp.CFrame.LookVector.Z).Unit
+                                    targetCF = CFrame.new(enemyHrp.Position + (look * 3) + Vector3.new(0, 0.5, 0), enemyHrp.Position)
+                                elseif mode == "BAITING" then
+                                    targetCF = CFrame.new(enemyHrp.Position + Vector3.new(0, -4, 0), enemyHrp.Position)
+                                elseif mode == "CLASSIC" then
+                                    targetCF = CFrame.new(enemyHrp.Position + Vector3.new(math.cos(angle) * 3, 4, math.sin(angle) * 3), enemyHrp.Position)
+                                else
+                                    targetCF = CFrame.new(enemyHrp.Position + Vector3.new(math.cos(angle) * 4, 2, math.sin(angle) * 4), enemyHrp.Position)
+                                end
+                                hrp.CFrame = targetCF
+                                if mode ~= "UEKILLERS V2" and mode ~= "BAITING" then
+                                    Camera.CFrame = CFrame.new(Camera.CFrame.Position, enemyHrp.Position)
+                                end
+                            end
+                        end)
+                    end)
+                else
+                    if orbConn then orbConn:Disconnect(); orbConn = nil end
+                end
+            end
+        })
+
+        local SafeBox = Tabs.Orbitus:AddRightGroupbox("Safe / Void Options")
+        SafeBox:AddToggle("VoidSpam", {
+            Text = "VoidSpam",
+            Default = false,
+            Callback = function(v)
+                if v then
+                    Toggles.OrbitEnabled:SetValue(false)
+                    Toggles.NoVoidSpam:SetValue(false)
+                    if voidSpamConn then voidSpamConn:Disconnect() end
+                    voidSpamConn = RunService.RenderStepped:Connect(function(dt)
+                        pcall(function()
+                            local _, hrp = getCharacterParts()
+                            if hrp then
+                                voidAngle = voidAngle + (dt * 100000.0)
+                                hrp.CFrame = CFrame.new(Vector3.new(math.cos(voidAngle) * 5000, 500, math.sin(voidAngle) * 5000))
+                                hrp.AssemblyLinearVelocity = Vector3.zero
+                            end
+                        end)
+                    end)
+                else
+                    if voidSpamConn then voidSpamConn:Disconnect(); voidSpamConn = nil end
+                end
+            end
+        })
+
+        SafeBox:AddToggle("NoVoidSpam", {
+            Text = "NoVoidSpam",
+            Default = false,
+            Callback = function(v)
+                if v then
+                    Toggles.OrbitEnabled:SetValue(false)
+                    Toggles.VoidSpam:SetValue(false)
+                    if noVoidSpamConn then noVoidSpamConn:Disconnect() end
+                    noVoidSpamConn = RunService.RenderStepped:Connect(function(dt)
+                        pcall(function()
+                            local _, hrp = getCharacterParts()
+                            if not hrp then return end
+                            local enemyNearby = false
+                            for _, p in pairs(Players:GetPlayers()) do
+                                if isTargetValid(p) and (hrp.Position - p.Character.HumanoidRootPart.Position).Magnitude < 40 then
+                                    enemyNearby = true; break
+                                end
+                            end
+                            if (hrp.Position - lastPos).Magnitude < 1.5 then stuckTime = stuckTime + dt else stuckTime = 0; lastPos = hrp.Position end
+                            if enemyNearby or stuckTime > 0 then
+                                hrp.AssemblyLinearVelocity = Vector3.zero
+                            else
+                                voidAngle = voidAngle + (dt * 250000)
+                                hrp.CFrame = CFrame.new(Vector3.new(math.cos(voidAngle) * 1000, 500, math.sin(voidAngle) * 1000))
+                                hrp.AssemblyLinearVelocity = Vector3.zero
+                            end
+                        end)
+                    end)
+                else
+                    if noVoidSpamConn then noVoidSpamConn:Disconnect(); noVoidSpamConn = nil end
+                end
+            end
+        })
+
+        local CombatBox = Tabs.Combat:AddLeftGroupbox("Silent Aim & Combat")
+        CombatBox:AddToggle("SilentAim", {
+            Text = "Silent Aim",
+            Default = false,
+            Callback = function(v) getgenv().SilentAimEnabled = v end
+        })
+
+        local RagebotBox = Tabs.Combat:AddLeftGroupbox("Ragebot")
+        RagebotBox:AddDropdown("RagebotMode", { Values = { "BAITING", "CLASSIC" }, Default = 1, Text = "Ragebot Mode" })
+        local RagebotStatusLabel = RagebotBox:AddLabel("RAGEBOT: OFF")
+
+        RagebotBox:AddToggle("RagebotEnabled", {
+            Text = "ENABLED",
+            Default = false,
+            Callback = function(v)
+                if v then
+                    if ragebotConn then ragebotConn:Disconnect() end
+                    ragebotConn = RunService.RenderStepped:Connect(function()
+                        pcall(function()
+                            local char, hrp, hum = getCharacterParts()
+                            if not hrp then RagebotStatusLabel:SetText("RAGEBOT: NO CHARACTER") return end
+
+                            local mode = Options.RagebotMode.Value
+                            local closestEnemy = nil
+                            local shortestDist = math.huge
+
+                            for _, p in pairs(Players:GetPlayers()) do
+                                if isTargetValid(p) then
+                                    local eHrp = p.Character.HumanoidRootPart
+                                    local dist = (hrp.Position - eHrp.Position).Magnitude
+                                    if dist < shortestDist then
+                                        if mode == "CLASSIC" or getValidHead(p.Character) then
+                                            shortestDist = dist
+                                            closestEnemy = p
+                                        end
+                                    end
+                                end
+                            end
+
+                            if closestEnemy and closestEnemy.Character then
+                                local eHrp = closestEnemy.Character.HumanoidRootPart
+                                local targetPos = (mode == "BAITING") and Vector3.new(hrp.Position.X, eHrp.Position.Y - 4, hrp.Position.Z) or (eHrp.Position + Vector3.new(0, -4, 0))
+                                
+
+
+                                hrp.CFrame = CFrame.new(targetPos) * CFrame.Angles(math.rad(90), 0, 0)
+                                hrp.AssemblyLinearVelocity = Vector3.zero
+                                if hum then 
+                                    hum:ChangeState(Enum.HumanoidStateType.PlatformStanding) 
+                                end
+                                
+                                RagebotStatusLabel:SetText("RAGEBOT: ATTACKING [" .. closestEnemy.Name .. "]")
+                            else
+                                RagebotStatusLabel:SetText("RAGEBOT: VOID...")
+                            end
+                        end)
+                    end)
+                else
+                    if ragebotConn then ragebotConn:Disconnect(); ragebotConn = nil end
+                    pcall(function()
+                        local _, _, hum = getCharacterParts()
+                        if hum then hum:ChangeState(Enum.HumanoidStateType.GettingUp) end
+                    end)
+                    RagebotStatusLabel:SetText("RAGEBOT: OFF")
+                end
+            end
+        })
+
+        local BypassBox = Tabs.Combat:AddRightGroupbox("Bypasses")
+        
+        local bypassActiveList = {slingshot = false, daggers = false, bow = false, chainsaw = false}
+        local function updateExclusiveBypass(key, state)
+            if state then
+                for k in pairs(bypassActiveList) do
+                    if k ~= key then
+                        bypassActiveList[k] = false
+                        if k == "slingshot" and Toggles.BypassSling then Toggles.BypassSling:SetValue(false) end
+                        if k == "daggers" and Toggles.BypassDaggers then Toggles.BypassDaggers:SetValue(false) end
+                        if k == "bow" and Toggles.BypassBow then Toggles.BypassBow:SetValue(false) end
+                        if k == "chainsaw" and Toggles.BypassChainsaw then Toggles.BypassChainsaw:SetValue(false) end
+                    end
+                end
+                bypassActiveList[key] = true
+            else
+                bypassActiveList[key] = false
+            end
+        end
+
+        BypassBox:AddToggle("BypassChainsaw", {
+            Text = "Bypass Chainsaw",
+            Default = false,
+            Callback = function(v)
+                updateExclusiveBypass("chainsaw", v)
+                getgenv().BypassChainsawEnabled = v
+                if v then
+                    if Toggles.OrbitEnabled then Toggles.OrbitEnabled:SetValue(false) end
+                    if Toggles.RagebotEnabled then Toggles.RagebotEnabled:SetValue(false) end
+                    
+                    if chainsawConn then chainsawConn:Disconnect() end
+                    chainsawConn = RunService.RenderStepped:Connect(function(dt)
+                        pcall(function()
+                            local char, hrp, hum = getCharacterParts()
+                            if not hrp then return end
+
+                            equipMelee()
+
+                            local closestEnemy = nil
+                            local shortestDist = math.huge
+
+                            for _, p in pairs(Players:GetPlayers()) do
+                                if isTargetValid(p) then
+                                    local eHrp = p.Character.HumanoidRootPart
+                                    local dist = (hrp.Position - eHrp.Position).Magnitude
+                                    if dist < shortestDist then
+                                        shortestDist = dist
+                                        closestEnemy = p
+                                    end
+                                end
+                            end
+
+                            if closestEnemy and closestEnemy.Character then
+                                local eHrp = closestEnemy.Character.HumanoidRootPart
+                                local enemyLook = eHrp.CFrame.LookVector
+                                local targetPos = eHrp.Position - (Vector3.new(enemyLook.X, 0, enemyLook.Z).Unit * 3) + Vector3.new(0, 0.5, 0)
+                                
+                                local lookAtCF = CFrame.new(targetPos, eHrp.Position)
+                                local rotatedCF = lookAtCF * CFrame.Angles(0, math.rad(45), 0)
+                                
+                                hrp.CFrame = rotatedCF
+                                hrp.AssemblyLinearVelocity = Vector3.zero
+                            else
+                                voidAngle = voidAngle + (dt * 2500)
+                                hrp.CFrame = CFrame.new(Vector3.new(math.cos(voidAngle) * 11831, 500, math.sin(voidAngle) * 11831))
+                                hrp.AssemblyLinearVelocity = Vector3.zero
+                            end
+                        end)
+                    end)
+                else
+                    if chainsawConn then 
+                        chainsawConn:Disconnect() 
+                        chainsawConn = nil 
+                    end
+                end
+            end
+        })
+
+        BypassBox:AddToggle("BypassSling", { Text = "Bypass Slingshot", Default = false, Callback = function(v) updateExclusiveBypass("slingshot", v) end })
+        BypassBox:AddToggle("BypassDaggers", { Text = "Bypass Daggers", Default = false, Callback = function(v) updateExclusiveBypass("daggers", v) end })
+        BypassBox:AddToggle("BypassBow", { Text = "Bypass Bow", Default = false, Callback = function(v) updateExclusiveBypass("bow", v) end })
+
+        local CombatMiscBox = Tabs.Combat:AddRightGroupbox("Misc Combat")
+        CombatMiscBox:AddToggle("NoSpam", {
+            Text = "No Spam (Mute Sounds)",
+            Default = false,
+            Callback = function(v)
+                pcall(function() for _, obj in pairs(workspace:GetDescendants()) do if obj:IsA("Sound") then obj.Volume = v and 0 or 0.5 end end end)
+            end
+        })
+
+        local function toggleTableAttribute(attr, val)
+            for _, gcVal in pairs(getgc(true)) do if type(gcVal) == "table" and rawget(gcVal, attr) then gcVal[attr] = val end end
+        end
+
+        CombatMiscBox:AddToggle("ModGun", {
+            Text = "Rapid Fire",
+            Default = false,
+            Callback = function(v)
+                if v then toggleTableAttribute("ShootCooldown", 0); toggleTableAttribute("ShootSpread", 0); toggleTableAttribute("ShootRecoil", 0) end
+            end
+        })
+
+        CombatMiscBox:AddToggle("RivalsFastMelee", {
+            Text = "fast mele",
+            Default = false,
+            Callback = function(v)
+                getgenv().RivalsFastMelee = v
+                if v then
+                    cacheMeleeTables()
+                    pcall(function()
+                        for _, gcVal in ipairs(cachedMeleeTables) do
                             if rawget(gcVal, "MeleeCooldown") then gcVal.MeleeCooldown = 0 end
                             if rawget(gcVal, "SwingCooldown") then gcVal.SwingCooldown = 0 end
                             if rawget(gcVal, "SlashCooldown") then gcVal.SlashCooldown = 0 end
                             if rawget(gcVal, "AttackCooldown") then gcVal.AttackCooldown = 0 end
                             if rawget(gcVal, "HitCooldown") then gcVal.HitCooldown = 0 end
                         end
-                    end
-                end)
-            end)
-        else
-            if rivalsMeleeConn then rivalsMeleeConn:Disconnect() rivalsMeleeConn = nil end
-        end
-    end
-})
-
-local EspBox = Tabs.Visuals:AddLeftGroupbox("ESP Settings")
-
-local colorValues = { "RAINBOW" }
-local baseNeonColors = {
-    {Name = "NEON AZUL", Color = Color3.fromRGB(0, 242, 255)},
-    {Name = "NEON ROJO", Color = Color3.fromRGB(255, 0, 64)},
-    {Name = "NEON VERDE", Color = Color3.fromRGB(0, 255, 85)},
-    {Name = "NEON ROSA", Color = Color3.fromRGB(255, 0, 191)},
-    {Name = "NEON AMARILLO", Color = Color3.fromRGB(255, 238, 0)},
-    {Name = "NEON MORADO", Color = Color3.fromRGB(170, 0, 255)},
-    {Name = "CYAN BRILLANTE", Color = Color3.fromRGB(0, 255, 255)},
-    {Name = "MAGENTA NEÓN", Color = Color3.fromRGB(255, 0, 128)},
-    {Name = "NARANJA LÁSER", Color = Color3.fromRGB(255, 85, 0)},
-    {Name = "LIMA CIBER", Color = Color3.fromRGB(128, 255, 0)},
-    {Name = "VIOLETA ELÉCTRICO", Color = Color3.fromRGB(204, 0, 255)},
-    {Name = "TURQUESA PLASMA", Color3.fromRGB(0, 255, 170)},
-    {Name = "ROJO NUCLEAR", Color3.fromRGB(255, 20, 20)},
-    {Name = "AZULCIEGO", Color3.fromRGB(0, 100, 255)},
-    {Name = "AMARILLO CÁPSULA", Color3.fromRGB(255, 255, 50)},
-    {Name = "ROSA LÁSER", Color3.fromRGB(255, 50, 150)},
-    {Name = "VERDE HACKER", Color3.fromRGB(0, 255, 50)},
-    {Name = "CIBER PURPURA", Color3.fromRGB(140, 0, 255)},
-    {Name = "CIAN RADIACTIVO", Color3.fromRGB(50, 255, 255)},
-    {Name = "NARANJA FUSIÓN", Color3.fromRGB(255, 100, 0)}
-}
-
-local colorMap = {}
-for _, info in ipairs(baseNeonColors) do
-    table.insert(colorValues, info.Name)
-    colorMap[info.Name] = info.Color
-end
-
-for i = 1, (100 - #colorValues) do
-    local generatedName = "NEON FX " .. tostring(i + #colorValues)
-    table.insert(colorValues, generatedName)
-    colorMap[generatedName] = Color3.fromHSV((i / 100) % 1, 1, 1)
-end
-
-EspBox:AddToggle("EspEnabled", {
-    Text = "Player ESP",
-    Default = false,
-    Callback = function(v)
-        if v then
-            if espConn then espConn:Disconnect() end
-            espConn = RunService.RenderStepped:Connect(function()
-                local colorMode = Options.EspColor.Value
-                for _, p in pairs(Players:GetPlayers()) do
-                    if p ~= LocalPlayer and p.Character then
-                        local highlight = p.Character:FindFirstChild("AxeESP")
-                        if not highlight then
-                            highlight = Instance.new("Highlight")
-                            highlight.Name = "AxeESP"
-                            highlight.Adornee = p.Character
-                            highlight.Parent = p.Character
-                        end
-                        
-                        if colorMode == "RAINBOW" then
-                            local rainbowColor = Color3.fromHSV(tick() % 3 / 3, 1, 1)
-                            highlight.FillColor = rainbowColor
-                            highlight.OutlineColor = rainbowColor
-                        else
-                            local selectedColor = colorMap[colorMode] or Color3.fromRGB(0, 242, 255)
-                            highlight.FillColor = selectedColor
-                            highlight.OutlineColor = selectedColor
-                        end
-                        
-                        highlight.FillTransparency = 0.05
-                        highlight.OutlineTransparency = 0
-                    end
-                end
-            end)
-        else
-            if espConn then espConn:Disconnect() espConn = nil end
-            for _, p in pairs(Players:GetPlayers()) do
-                if p.Character then
-                    local h = p.Character:FindFirstChild("AxeESP")
-                    if h then h:Destroy() end
+                    end)
                 end
             end
+        })
+
+        local colorValues = { "RAINBOW" }
+        local baseNeonColors = {
+            {Name = "NEON AZUL", Color = Color3.fromRGB(0, 242, 255)},
+            {Name = "NEON ROJO", Color = Color3.fromRGB(255, 0, 64)},
+            {Name = "NEON VERDE", Color = Color3.fromRGB(0, 255, 85)},
+            {Name = "NEON ROSA", Color = Color3.fromRGB(255, 0, 191)},
+            {Name = "NEON AMARILLO", Color = Color3.fromRGB(255, 238, 0)},
+            {Name = "NEON MORADO", Color = Color3.fromRGB(170, 0, 255)}
+        }
+        local colorMap = {}
+        for _, info in ipairs(baseNeonColors) do table.insert(colorValues, info.Name); colorMap[info.Name] = info.Color end
+
+        local EspBox = Tabs.Visuals:AddLeftGroupbox("ESP Settings (10 en 1)")
+
+        getgenv().EspConfig = {
+            Enabled = false,
+            Boxes = false,
+            HealthBar = true,
+            HealthText = true,
+            Distance = true,
+            Names = true,
+            Tracers = false,
+            Skeletons = false,
+            HeadDots = false,
+            OffscreenArrows = false,
+            TeamCheck = true
+        }
+
+        local espDrawings = {}
+
+        local function clearESP()
+            for _, data in pairs(espDrawings) do
+                for _, drawing in pairs(data) do
+                    pcall(function() drawing:Remove() end)
+                end
+            end
+            espDrawings = {}
         end
-    end
-})
 
-EspBox:AddDropdown("EspColor", {
-    Values = colorValues,
-    Default = 1,
-    Text = "ESP Color"
-})
+        EspBox:AddToggle("EspEnabled", {
+            Text = "ESP",
+            Default = false,
+            Callback = function(v)
+                getgenv().EspConfig.Enabled = v
+                if not v then
+                    clearESP()
+                    if espConn then espConn:Disconnect(); espConn = nil end
+                else
+                    if espConn then espConn:Disconnect() end
+                    espConn = RunService.RenderStepped:Connect(function()
+                        local camera = workspace.CurrentCamera
+                        local colorMode = Options.EspColor.Value
 
-EspBox:AddButton("Unlock All", function()
-    pcall(function()
-        loadstring(game:HttpGet("https://pastefy.app/hr6aouJe/raw"))()
-    end)
-end)
-
-local MovementBox = Tabs.Visuals:AddRightGroupbox("Movement")
-
-MovementBox:AddToggle("SpeedBoost", {
-    Text = "Speed Boost",
-    Default = false,
-    Callback = function(v)
-        if v then
-            if speedConn then speedConn:Disconnect() end
-            speedConn = RunService.Heartbeat:Connect(function()
-                pcall(function()
-                    local _, _, hum = getCharacterParts()
-                    if hum then hum.WalkSpeed = Options.SpeedAmount.Value end
-                end)
-            end)
-        else
-            if speedConn then speedConn:Disconnect() speedConn = nil end
-            pcall(function()
-                local _, _, hum = getCharacterParts()
-                if hum then hum.WalkSpeed = 16 end
-            end)
-        end
-    end
-})
-
-MovementBox:AddSlider("SpeedAmount", {
-    Text = "WalkSpeed",
-    Default = 28,
-    Min = 16,
-    Max = 100,
-    Rounding = 0
-})
-
-MovementBox:AddToggle("InfiniteJump", {
-    Text = "Infinite Jump",
-    Default = false,
-    Callback = function(v)
-        if v then
-            if infJumpConn then infJumpConn:Disconnect() end
-            infJumpConn = UserInputService.JumpRequest:Connect(function()
-                pcall(function()
-                    local _, _, hum = getCharacterParts()
-                    if hum then
-                        hum:ChangeState(Enum.HumanoidStateType.Jumping)
-                    end
-                end)
-            end)
-        else
-            if infJumpConn then infJumpConn:Disconnect() infJumpConn = nil end
-        end
-    end
-})
-
-MovementBox:AddToggle("Noclip", {
-    Text = "Noclip",
-    Default = false,
-    Callback = function(v)
-        if v then
-            if noclipConn then noclipConn:Disconnect() end
-            noclipConn = RunService.Stepped:Connect(function()
-                pcall(function()
-                    local char = getCharacterParts()
-                    if char then
-                        for _, part in pairs(char:GetDescendants()) do
-                            if part:IsA("BasePart") then
-                                part.CanCollide = false
+                        for plr, data in pairs(espDrawings) do
+                            if not plr or not plr.Character or not plr.Character:FindFirstChild("HumanoidRootPart") then
+                                for _, d in pairs(data) do pcall(function() d:Remove() end) end
+                                espDrawings[plr] = nil
                             end
                         end
-                    end
-                end)
-            end)
-        else
-            if noclipConn then noclipConn:Disconnect() noclipConn = nil end
-        end
+
+                        for _, p in pairs(Players:GetPlayers()) do
+                            if p ~= LocalPlayer and p.Character then
+                                local char = p.Character
+                                local hrp = char:FindFirstChild("HumanoidRootPart")
+                                local hum = char:FindFirstChild("Humanoid")
+                                local head = char:FindFirstChild("Head")
+
+                                if hrp and hum and head and (not getgenv().EspConfig.TeamCheck or isEnemy(p)) then
+                                    local vector, onScreen = camera:WorldToViewportPoint(hrp.Position)
+
+                                    if not espDrawings[p] then
+                                        espDrawings[p] = {
+                                            Box = Drawing.new("Square"),
+                                            HealthBarBg = Drawing.new("Square"),
+                                            HealthBar = Drawing.new("Square"),
+                                            InfoText = Drawing.new("Text"),
+                                            Tracer = Drawing.new("Line"),
+                                            HeadDot = Drawing.new("Circle"),
+                                            OffscreenArrow = Drawing.new("Triangle"),
+                                            SkulHead = Drawing.new("Line"),
+                                            SkulArmL = Drawing.new("Line"),
+                                            SkulArmR = Drawing.new("Line"),
+                                            SkulLegL = Drawing.new("Line"),
+                                            SkulLegR = Drawing.new("Line")
+                                        }
+                                        espDrawings[p].Box.Visible = false; espDrawings[p].Box.Filled = false; espDrawings[p].Box.Thickness = 1
+                                        espDrawings[p].HealthBarBg.Visible = false; espDrawings[p].HealthBarBg.Filled = true; espDrawings[p].HealthBarBg.Color = Color3.fromRGB(0, 0, 0)
+                                        espDrawings[p].HealthBar.Visible = false; espDrawings[p].HealthBar.Filled = true
+                                        espDrawings[p].InfoText.Visible = false; espDrawings[p].InfoText.Size = 13; espDrawings[p].InfoText.Center = true; espDrawings[p].InfoText.Outline = true; espDrawings[p].InfoText.Font = 2
+                                        espDrawings[p].Tracer.Visible = false; espDrawings[p].Tracer.Thickness = 1
+                                        espDrawings[p].HeadDot.Visible = false; espDrawings[p].HeadDot.Filled = true; espDrawings[p].HeadDot.Radius = 3
+                                        espDrawings[p].OffscreenArrow.Visible = false; espDrawings[p].OffscreenArrow.Filled = true
+                                        espDrawings[p].SkulHead.Visible = false; espDrawings[p].SkulArmL.Visible = false; espDrawings[p].SkulArmR.Visible = false; espDrawings[p].SkulLegL.Visible = false; espDrawings[p].SkulLegR.Visible = false
+                                    end
+
+                                    local d = espDrawings[p]
+                                    local col = (colorMode == "RAINBOW") and Color3.fromHSV(tick() % 3 / 3, 1, 1) or (colorMap[colorMode] or Color3.fromRGB(0, 242, 255))
+
+                                    if onScreen and hum.Health > 0 then
+                                        local topPos = camera:WorldToViewportPoint(head.Position + Vector3.new(0, 0.5, 0))
+                                        local botPos = camera:WorldToViewportPoint(hrp.Position - Vector3.new(0, 3, 0))
+                                        local height = math.abs(topPos.Y - botPos.Y)
+                                        local width = height / 2
+
+                                        if getgenv().EspConfig.Boxes then
+                                            d.Box.Visible = true; d.Box.Size = Vector2.new(width, height); d.Box.Position = Vector2.new(vector.X - width / 2, topPos.Y); d.Box.Color = col
+                                        else d.Box.Visible = false end
+
+                                        if getgenv().EspConfig.HealthBar then
+                                            local healthPercent = math.clamp(hum.Health / hum.MaxHealth, 0, 1)
+                                            d.HealthBarBg.Visible = true; d.HealthBarBg.Size = Vector2.new(4, height + 2); d.HealthBarBg.Position = Vector2.new(vector.X - width / 2 - 7, topPos.Y - 1)
+                                            d.HealthBar.Visible = true; d.HealthBar.Size = Vector2.new(2, height * healthPercent); d.HealthBar.Position = Vector2.new(vector.X - width / 2 - 6, topPos.Y + (height - (height * healthPercent)))
+                                            d.HealthBar.Color = Color3.fromRGB(255 - (healthPercent * 255), healthPercent * 255, 0)
+                                        else d.HealthBar.Visible = false; d.HealthBarBg.Visible = false end
+
+                                        if getgenv().EspConfig.Names or getgenv().EspConfig.Distance or getgenv().EspConfig.HealthText then
+                                            local infoStr = ""
+                                            if getgenv().EspConfig.Names then infoStr = infoStr .. p.Name .. " " end
+                                            if getgenv().EspConfig.HealthText then infoStr = infoStr .. "[" .. math.floor(hum.Health) .. "HP] " end
+                                            if getgenv().EspConfig.Distance then infoStr = infoStr .. "(" .. math.floor((camera.CFrame.Position - hrp.Position).Magnitude) .. "m)" end
+                                            d.InfoText.Visible = true; d.InfoText.Text = infoStr; d.InfoText.Position = Vector2.new(vector.X, topPos.Y - 18); d.InfoText.Color = col
+                                        else d.InfoText.Visible = false end
+
+                                        if getgenv().EspConfig.Tracers then
+                                            d.Tracer.Visible = true; d.Tracer.From = Vector2.new(camera.ViewportSize.X / 2, camera.ViewportSize.Y); d.Tracer.To = Vector2.new(vector.X, botPos.Y); d.Tracer.Color = col
+                                        else d.Tracer.Visible = false end
+
+                                        if getgenv().EspConfig.Skeletons and char:FindFirstChild("LeftUpperArm") and char:FindFirstChild("RightUpperArm") then
+                                            local lArm = camera:WorldToViewportPoint(char.LeftUpperArm.Position)
+                                            local rArm = camera:WorldToViewportPoint(char.RightUpperArm.Position)
+                                            local lLeg = camera:WorldToViewportPoint(char:FindFirstChild("LeftUpperLeg") and char.LeftUpperLeg.Position or hrp.Position)
+                                            local rLeg = camera:WorldToViewportPoint(char:FindFirstChild("RightUpperLeg") and char.RightUpperLeg.Position or hrp.Position)
+                                            
+                                            d.SkulHead.Visible = true; d.SkulHead.From = Vector2.new(vector.X, topPos.Y); d.SkulHead.To = Vector2.new(vector.X, vector.Y); d.SkulHead.Color = col
+                                            d.SkulArmL.Visible = true; d.SkulArmL.From = Vector2.new(vector.X, vector.Y); d.SkulArmL.To = Vector2.new(lArm.X, lArm.Y); d.SkulArmL.Color = col
+                                            d.SkulArmR.Visible = true; d.SkulArmR.From = Vector2.new(vector.X, vector.Y); d.SkulArmR.To = Vector2.new(rArm.X, rArm.Y); d.SkulArmR.Color = col
+                                            d.SkulLegL.Visible = true; d.SkulLegL.From = Vector2.new(vector.X, hrp.Position.Y); d.SkulLegL.To = Vector2.new(lLeg.X, lLeg.Y); d.SkulLegL.Color = col
+                                            d.SkulLegR.Visible = true; d.SkulLegR.From = Vector2.new(vector.X, hrp.Position.Y); d.SkulLegR.To = Vector2.new(rLeg.X, rLeg.Y); d.SkulLegR.Color = col
+                                        else
+                                            d.SkulHead.Visible = false; d.SkulArmL.Visible = false; d.SkulArmR.Visible = false; d.SkulLegL.Visible = false; d.SkulLegR.Visible = false
+                                        end
+
+                                        if getgenv().EspConfig.HeadDots then
+                                            d.HeadDot.Visible = true; d.HeadDot.Position = Vector2.new(topPos.X, topPos.Y); d.HeadDot.Color = col
+                                        else d.HeadDot.Visible = false end
+
+                                        d.OffscreenArrow.Visible = false
+                                    else
+                                        d.Box.Visible = false; d.HealthBar.Visible = false; d.HealthBarBg.Visible = false; d.InfoText.Visible = false; d.Tracer.Visible = false; d.HeadDot.Visible = false; d.SkulHead.Visible = false; d.SkulArmL.Visible = false; d.SkulArmR.Visible = false; d.SkulLegL.Visible = false; d.SkulLegR.Visible = false
+
+                                        if getgenv().EspConfig.OffscreenArrows and hum.Health > 0 then
+                                            local screenCenter = Vector2.new(camera.ViewportSize.X / 2, camera.ViewportSize.Y / 2)
+                                            local camVector = (hrp.Position - camera.CFrame.Position)
+                                            local flatCamVector = Vector3.new(camVector.X, 0, camVector.Z).Unit
+                                            d.OffscreenArrow.Visible = true
+                                            d.OffscreenArrow.PointA = screenCenter + (Vector2.new(flatCamVector.X, flatCamVector.Z) * 150)
+                                            d.OffscreenArrow.Color = col
+                                        else
+                                            d.OffscreenArrow.Visible = false
+                                        end
+                                    end
+                                end
+                            end
+                        end
+                    end)
+                end
+            end
+        })
+
+        EspBox:AddDropdown("EspColor", { Values = colorValues, Default = 1, Text = "ESP Color Theme" })
+        EspBox:AddToggle("EspBoxes", { Text = "1. Cajas 2D (Boxes)", Default = false, Callback = function(v) getgenv().EspConfig.Boxes = v end })
+        EspBox:AddToggle("EspHealthBar", { Text = "2. Barra de Vida Lateral", Default = true, Callback = function(v) getgenv().EspConfig.HealthBar = v end })
+        EspBox:AddToggle("EspHealthText", { Text = "3. Texto de Vida Exacta", Default = true, Callback = function(v) getgenv().EspConfig.HealthText = v end })
+        EspBox:AddToggle("EspDistance", { Text = "4. Distancia en Metros", Default = true, Callback = function(v) getgenv().EspConfig.Distance = v end })
+        EspBox:AddToggle("EspNames", { Text = "5. Nombres de Jugadores", Default = true, Callback = function(v) getgenv().EspConfig.Names = v end })
+        EspBox:AddToggle("EspTracers", { Text = "6. Líneas Guía (Tracers)", Default = false, Callback = function(v) getgenv().EspConfig.Tracers = v end })
+        EspBox:AddToggle("EspSkeletons", { Text = "7. Esqueleto Detallado", Default = false, Callback = function(v) getgenv().EspConfig.Skeletons = v end })
+        EspBox:AddToggle("EspHeadDots", { Text = "8. Punto en la Cabeza", Default = false, Callback = function(v) getgenv().EspConfig.HeadDots = v end })
+        EspBox:AddToggle("EspOffscreen", { Text = "9. Alerta Fuera de Pantalla", Default = false, Callback = function(v) getgenv().EspConfig.OffscreenArrows = v end })
+        EspBox:AddToggle("EspTeamCheck", { Text = "10. Filtro de Enemigos (Team)", Default = true, Callback = function(v) getgenv().EspConfig.TeamCheck = v end })
+
+        EspBox:AddButton("Unlock All", function() 
+            pcall(function() loadstring(game:HttpGet("https://pastefy.app/hr6aouJe/raw"))() end) 
+        end)
+
+        local MovementBox = Tabs.Visuals:AddRightGroupbox("Movement")
+        MovementBox:AddToggle("SpeedBoost", {
+            Text = "Speed Boost",
+            Default = false,
+            Callback = function(v)
+                if v then
+                    if speedConn then speedConn:Disconnect() end
+                    speedConn = RunService.Heartbeat:Connect(function() pcall(function() local _, _, hum = getCharacterParts() if hum then hum.WalkSpeed = Options.SpeedAmount.Value end end) end)
+                else
+                    if speedConn then speedConn:Disconnect(); speedConn = nil end
+                    pcall(function() local _, _, hum = getCharacterParts() if hum then hum.WalkSpeed = 16 end end)
+                end
+            end
+        })
+
+        MovementBox:AddSlider("SpeedAmount", { Text = "WalkSpeed", Default = 28, Min = 16, Max = 100, Rounding = 0 })
+        MovementBox:AddToggle("InfiniteJump", {
+            Text = "Infinite Jump",
+            Default = false,
+            Callback = function(v)
+                if v then
+                    if infJumpConn then infJumpConn:Disconnect() end
+                    infJumpConn = UserInputService.JumpRequest:Connect(function() pcall(function() local _, _, hum = getCharacterParts() if hum then hum:ChangeState(Enum.HumanoidStateType.Jumping) end end) end)
+                else
+                    if infJumpConn then infJumpConn:Disconnect(); infJumpConn = nil end
+                end
+            end
+        })
+
+        MovementBox:AddToggle("Noclip", {
+            Text = "Noclip",
+            Default = false,
+            Callback = function(v)
+                if v then
+                    if noclipConn then noclipConn:Disconnect() end
+                    noclipConn = RunService.Stepped:Connect(function() pcall(function() local char = getCharacterParts() if char then for _, part in pairs(char:GetDescendants()) do if part:IsA("BasePart") then part.CanCollide = false end end end end) end)
+                else
+                    if noclipConn then noclipConn:Disconnect(); noclipConn = nil end
+                end
+            end
+        })
+
+        local MenuGroup = Tabs["UI Settings"]:AddLeftGroupbox("Menu")
+        MenuGroup:AddToggle("KeybindMenuOpen", { Default = Library.KeybindFrame.Visible, Text = "Open Keybind Menu", Callback = function(v) Library.KeybindFrame.Visible = v end })
+        MenuGroup:AddLabel("Menu bind"):AddKeyPicker("MenuKeybind", { Default = "RightShift", NoUI = true, Text = "Menu keybind" })
+        MenuGroup:AddButton("Unload", function() Library:Unload() end)
+
+        Library.ToggleKeybind = Options.MenuKeybind
+        ThemeManager:SetLibrary(Library)
+        SaveManager:SetLibrary(Library)
+        SaveManager:IgnoreThemeSettings()
+        SaveManager:SetIgnoreIndexes({"MenuKeybind"})
+        ThemeManager:SetFolder("AxeHub")
+        SaveManager:SetFolder("AxeHub/configs")
+        SaveManager:BuildConfigSection(Tabs["UI Settings"])
+        ThemeManager:ApplyToTab(Tabs["UI Settings"])
+        SaveManager:LoadAutoloadConfig()
+    else
+        StatusLabel.TextColor3 = Color3.fromRGB(255, 50, 50)
+        StatusLabel.Text = "INVALID KEY."
     end
-})
-
-local MenuGroup = Tabs["UI Settings"]:AddLeftGroupbox("Menu")
-
-MenuGroup:AddToggle("KeybindMenuOpen", {
-    Default = Library.KeybindFrame.Visible,
-    Text = "Open Keybind Menu",
-    Callback = function(v)
-        Library.KeybindFrame.Visible = v
-    end
-})
-
-MenuGroup:AddLabel("Menu bind"):AddKeyPicker("MenuKeybind", { Default = "RightShift", NoUI = true, Text = "Menu keybind" })
-
-MenuGroup:AddButton("Unload", function()
-    Library:Unload()
 end)
-
-Library.ToggleKeybind = Options.MenuKeybind
-
-ThemeManager:SetLibrary(Library)
-SaveManager:SetLibrary(Library)
-
-SaveManager:IgnoreThemeSettings()
-SaveManager:SetIgnoreIndexes({"MenuKeybind"})
-
-ThemeManager:SetFolder("AxeHub")
-SaveManager:SetFolder("AxeHub/configs")
-
-SaveManager:BuildConfigSection(Tabs["UI Settings"])
-ThemeManager:ApplyToTab(Tabs["UI Settings"])
-
-SaveManager:LoadAutoloadConfig()
